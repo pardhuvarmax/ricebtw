@@ -161,10 +161,18 @@ something else on the system depends on it existing.
 Everything else that got migrated (bat, eza, fd, ripgrep, btop, fastfetch,
 lazygit, gh, direnv, atuin, rustup, the zsh plugin packages, plus the 22
 leaf tools listed in modules/cli.nix and programs.git's ~/.config/git/config)
-had its pacman package fully removed after verification. (Note: starship was
-never actually part of this migration -- zsh theming is Powerlevel10k via
-modules/shell.nix, not starship. Earlier revisions of this README claimed
-otherwise; that was a doc error, not a real package.)
+had its pacman package fully removed after verification, plus a second leaf
+batch (ani-cli, gifski, irssi, weechat, znc, luarocks, nyx, pamixer, sparse,
+stress-ng, yq, wl-clip-persist, tesseract).
+
+Note on starship: zsh theming is Powerlevel10k (modules/shell.nix), not
+starship -- an earlier revision of this README wrongly claimed starship had
+been migrated, when in fact it wasn't installed anywhere at all. It later
+turned out fish's config.fish (a separate, non-Home-Manager-managed shell
+config) calls `starship init fish` unconditionally, so the binary being
+missing was an actual live breakage, not a doc inaccuracy. Fixed by adding
+starship to modules/cli.nix. zsh (via p10k) and fish (via starship) are
+two independent prompts on two independent shells; don't conflate them.
 
 Workflow
 --------
