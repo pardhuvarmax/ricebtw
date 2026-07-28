@@ -50,6 +50,12 @@ fastfetch --config hyde/*.jsonc
       "keyColor": "green"
     },
     {
+      "type": "command",
+      "key": "  󰏗 Arch User Repository",
+      "text": "pacman -Qm | wc -l",
+      "keyColor": "green"
+    },
+    {
       "type": "display",
       "key": "  󰍹 Display",
       "format": "{1}x{2} @ {3}Hz [{7}]",
@@ -94,7 +100,7 @@ fastfetch --config hyde/*.jsonc
     },
     {
       "type": "command",
-      "text": "glxinfo 2>/dev/null | grep 'OpenGL version' | sed 's/.*Mesa /amdgpu (Mesa /' | sed 's/-cachyos[0-9.]*/-cachyos)/' | awk '{print $1, $2, $3}'",
+      "text": "glxinfo 2>/dev/null | grep 'OpenGL version' | sed 's/.*Mesa /amdgpu (Mesa /' | sed 's/$/)/' | awk '{print $1, $2, $3}'",
       "key": "   GPU Driver",
       "keyColor": "magenta"
     },
