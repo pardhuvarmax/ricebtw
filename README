@@ -108,6 +108,18 @@ What stays on pacman permanently (not a "not done yet", a deliberate never):
   jq           hard-required by yq
   llvm/clang   only soft/optional reverse deps, low priority to touch
 
+Real regression hit and fixed: Nix's python3 (added Phase 4) shadowed
+/usr/bin/python3 on PATH and broke virt-manager -- its #!/usr/bin/env python3
+shebang resolved to Nix's bare python3 instead of Arch's, which has
+python-gobject installed and Nix's didn't, so `import gi` failed. Fixed by
+removing python3 from dev.nix's global home.packages entirely (see comment
+there). General lesson: any Arch tool using `env python3` (or similar
+PATH-dependent shebangs) for system integration is at risk from a globally
+-shadowing Nix interpreter of the same name -- gdb/nodejs could theoretically
+have the same class of issue if something similar surfaces; check for
+ModuleNotFoundError-style breakage in system tools after adding any Nix
+language runtime, not just after adding libraries directly.
+
 For all of these, the Nix-provided copy is installed and shadows the pacman
 one on PATH for your own use; pacman's copy is never removed because
 something else on the system depends on it existing.
