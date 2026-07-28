@@ -1,0 +1,5 @@
+Just init.lua, lazy-lock.json, matugen_colors.lua -- not the full Neovim
+config directory. Plugins are managed live by lazy.nvim (git-bootstrapped
+from init.lua) into ~/.local/share/nvim, ~404M and reproducible from
+lazy-lock.json, so not backed up here. See modules/editors.nix in the main
+repo for why Nix only provides the nvim binary itself.

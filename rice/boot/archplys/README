@@ -1,0 +1,4 @@
+Theme sources as downloaded, before installation. fluent/ = GRUB theme
+(active, see ../grub-theme-setting.txt). archply1/arch-mac-style = the active
+Plymouth theme (see ../plymouthd.conf). archply2/arch-slider-and-glow = the
+other installed-but-inactive Plymouth theme.

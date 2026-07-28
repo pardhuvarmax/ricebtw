@@ -1,0 +1,5 @@
+The illogical-impulse dotfiles installer's own state directory (config.json,
+installed_true, installed_listfile, actions) -- not live config for anything
+running. Removed from the live system after everything useful in it was
+cross-checked and backed up (see the main rice/README). Kept here purely as
+a historical snapshot of what the installer once set up.

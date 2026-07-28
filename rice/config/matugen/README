@@ -1,0 +1,6 @@
+matugen config -- the wallpaper-driven dynamic color engine this whole rice
+is built around. config.toml lists every template it generates and where the
+output goes (kitty, quickshell, neovim, cava, swayosd, GTK, Hyprland
+colors.conf, qt5ct/qt6ct). templates/ holds the actual template files it
+fills in with colors extracted from the current wallpaper. Deliberately not
+managed by Home Manager -- see the main Nix repo README's Phase 7 notes.

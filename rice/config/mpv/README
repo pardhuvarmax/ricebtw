@@ -1,0 +1,2 @@
+Just mpv.conf -- player settings, not the mpvpaper live-wallpaper invocation
+(that's a command-line flag in hypr/scripts/quickshell, not mpv.conf itself).

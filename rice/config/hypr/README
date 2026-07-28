@@ -1,0 +1,5 @@
+Hyprland compositor config -- the actual daily-driver rice. Includes
+scripts/quickshell/Shell.qml (the real, live quickshell shell -- see
+scripts/quickshell/), the wallpaper picker, calendar (with the excluded
+OpenWeather key, see .env.example), and matugen-generated colors.conf. This
+is the biggest and most load-bearing folder in this whole backup.
