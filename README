@@ -11,28 +11,43 @@ desktop stack.
 Layout
 ------
 
-flake.nix            entry point, pins nixpkgs-unstable + home-manager
-home.nix              top-level config, wires up the modules below
-modules/packages.nix  catch-all for packages with no dedicated module yet
-modules/cli.nix       CLI utilities (bat, eza, fd, ripgrep, fzf, jq, btop,
-                       fastfetch, lazygit, gh, direnv, atuin)
-modules/git.nix       reserved for programs.git (not done yet, see below)
+flake.nix              entry point, pins nixpkgs-unstable + home-manager + agenix
+home.nix               top-level config, wires up the modules below
+modules/packages.nix  catch-all for packages with no dedicated module yet;
+                       empty by design, not a placeholder for missing work
+modules/cli.nix       CLI utilities -- the original Phase 1 set (bat, eza, fd,
+                       ripgrep, fzf, jq, btop, fastfetch, lazygit, gh, direnv,
+                       atuin) plus 22 leaf tools swept in later (zellij, yazi,
+                       zoxide, yt-dlp, ncdu, cloc, bc, socat, pv, tree-sitter,
+                       cbonsai, asciiquarium, gum, tty-clock, ttyper, p7zip,
+                       inotify-tools, w3m, lynx, mpc, rmpc, wev, wtype,
+                       wmctrl) -- see the file for the exact current list,
+                       this README won't be re-synced on every addition
+modules/git.nix       programs.git -- user/editor/credential.helper, written
+                       to ~/.config/git/config (XDG path, not ~/.gitconfig)
 modules/shell.nix     zsh: history, completion, autosuggestions, syntax
                        highlighting, fzf-tab, Powerlevel10k, env vars
-modules/aliases.nix   all shell aliases, deduped from the old .zshrc + ~/.aliases
+modules/aliases.nix   all shell aliases -- deduped from the old .zshrc +
+                       ~/.aliases, plus a Nix/Home Manager workflow set
+                       (hms/hmb/hmg/ngc/etc, see the file header comment)
 modules/dev.nix       dev toolchains (go, rustup, nodejs, python3, pipx,
                        cmake, ninja, llvm, clang)
 modules/secrets.nix   agenix wiring (flake input + CLI); no secrets defined yet
 modules/editors.nix   Neovim binary only -- ~/.config/nvim is self-managed lazy.nvim
 modules/gui.nix       GUI apps that actually work under Nix (see GPU note below)
-secrets/secrets.nix   agenix recipient manifest, gitignored (has a real email
-                       in the SSH key comment) -- recreate from
+secrets/secrets.nix   agenix recipient manifest, gitignored (has a real
+                       pubkey, deliberately not pushed) -- recreate from
                        ~/.ssh/id_ed25519.pub if this repo is ever cloned fresh
 backup/               the original stock `home-manager init` output, kept
                        for reference, not imported by anything
 rice/                 plain backup COPY of the live Hyprland/matugen desktop
-                       dotfiles (hypr, waybar, kitty, rofi, swaync, etc) --
-                       not managed or symlinked by Home Manager, see rice/README
+                       dotfiles (hypr, waybar, kitty, rofi, swaync, etc), plus
+                       the full ~/Pictures/Wallpapers pool -- not managed or
+                       symlinked by Home Manager, see rice/README. The
+                       Wallpapers folder (~3.7G) is fully committed and pushed
+                       but excluded from this repo's local working tree via
+                       `git sparse-checkout` (see Workflow below) so it
+                       doesn't sit on disk twice; it's still on GitHub in full.
 
 Status
 ------
@@ -71,6 +86,17 @@ Done:  Phase 9 (final cleanup) -- 12 orphaned packages left over from the
        plus tree-sitter itself once it became a second-order orphan), pacman
        db verified clean, nix store gc'd (1792 dead paths, 1005.6 MiB freed,
        all 9 generations and current activation verified intact afterward)
+Done:  post-Phase-1 sweep -- 22 additional leaf CLI tools (see modules/cli.nix
+       for the list) added after confirming via `pacman -Qi` that every one
+       had zero pacman reverse-deps (Required By: None); all 22 pacman
+       packages fully removed after the Nix build/switch was verified
+Done:  post-Phase-2 cleanup -- dropped the unused `sendemail`/gmail block
+       from git.nix (no evidence of `git send-email` use, and it put a real
+       email in this public repo's history for no benefit) and removed the
+       stale plain ~/.gitconfig on disk, which predated this migration and
+       was silently shadowing the Nix-managed ~/.config/git/config for
+       anything both files set. Backed up locally to ~/.config/hyprbackup
+       (never pushed) before deleting, not left as dead weight in the repo.
 
 GPU acceleration under Nix (read before touching Phase 7/8)
 -------------------------------------------------------------
@@ -102,6 +128,7 @@ each one for GL/EGL errors before assuming it'll behave like flameshot did.
 What stays on pacman permanently (not a "not done yet", a deliberate never):
 
   zsh          it's /bin/zsh, your actual login shell in /etc/passwd
+  git          hard-required by paru, yay, git-filter-repo, zed
   python       hard-required by ~90 packages incl. reflector, kitty, meson
   nodejs/npm   hard-required by zed
   ninja        hard-required by meson
@@ -132,8 +159,12 @@ something else on the system depends on it existing.
                                    pacman's is the only one and stays that way
 
 Everything else that got migrated (bat, eza, fd, ripgrep, btop, fastfetch,
-lazygit, gh, direnv, atuin, the zsh plugin packages, starship, rustup) had
-its pacman package fully removed after verification.
+lazygit, gh, direnv, atuin, rustup, the zsh plugin packages, plus the 22
+leaf tools listed in modules/cli.nix and programs.git's ~/.config/git/config)
+had its pacman package fully removed after verification. (Note: starship was
+never actually part of this migration -- zsh theming is Powerlevel10k via
+modules/shell.nix, not starship. Earlier revisions of this README claimed
+otherwise; that was a doc error, not a real package.)
 
 Workflow
 --------
@@ -159,3 +190,29 @@ Rollback
 
 Removing a pacman package is only ever done after the Nix replacement is
 installed, built, switched to, and functionally verified -- never before.
+
+Sparse-checkout (rice/home/Pictures/Wallpapers)
+------------------------------------------------
+
+This repo's git history and GitHub remote have the full wallpaper pool
+committed (~3.7G, 2226 files), but the local working tree does not
+materialize it -- `git sparse-checkout` (non-cone mode) excludes just that
+one path via .git/info/sparse-checkout:
+
+  /*
+  !/rice/home/Pictures/Wallpapers/
+
+This avoids a duplicate on-disk copy (the real one lives at
+~/Pictures/Wallpapers, untouched by any of this). The files are still fully
+tracked -- `git ls-files -v` shows them with the `S` (skip-worktree) flag,
+and `git status` correctly reports a clean tree. Fast prompt tools that
+bypass git's own status logic (Powerlevel10k's gitstatusd, specifically)
+don't honor skip-worktree and will misreport these as modified -- that's a
+known cosmetic mismatch, not a real repo problem. To get the files back
+locally: `git sparse-checkout disable` (or `add` the specific path).
+
+Also: any single `git push` covering this history must stay under GitHub's
+2 GiB pack-size hard limit. The wallpaper commits were split into ~1.2G
+batches for this reason (see git log around the "wallpaper pool batch"
+commits) -- if more large binary content is ever added to rice/, batch it
+the same way rather than committing it all at once.
