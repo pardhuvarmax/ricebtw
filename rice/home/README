@@ -1,0 +1,3 @@
+Plain copies of loose dotfiles from ~ (not ~/.config): .p10k.zsh, .gtkrc-2.0,
+.aliases. See the parent rice/README for details. Not managed or symlinked by
+Home Manager -- editing a file here does nothing to your live config.

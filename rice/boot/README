@@ -1,0 +1,4 @@
+Plymouth (boot splash) and GRUB theme sources, copied from ~/Downloads/archplys,
+plus the small config files that say which theme is actually active
+(plymouthd.conf, grub-theme-setting.txt). See the parent rice/README for how
+to actually reinstall either theme from these sources.

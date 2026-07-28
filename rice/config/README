@@ -1,0 +1,4 @@
+Plain copies of app config directories from ~/.config, one subfolder per app.
+See the parent rice/README for the full list, what's excluded and why, and
+where each one came from. Not managed or symlinked by Home Manager -- editing
+a file here does nothing to your live config.
