@@ -47,7 +47,24 @@ Skipped: Phase 7 (fonts/themes/icons/cursor) -- investigated, deliberately
          Nerd Font, in kitty) is hard-blocked from pacman removal by yazi
          anyway. Nothing here would gain from a Nix package -- it's already
          better managed outside of pacman and Nix both.
-Not started: Phase 8 (Hyprland/Waybar/etc), Phase 9 (final cleanup)
+Skipped: Phase 8 (Hyprland/Waybar/Hyprlock/Hypridle/Hyprpaper/Rofi/
+         notifications/clipboard/portal) -- investigated, deliberately not
+         migrating. hyprland (the live compositor, required by hyprshade),
+         hyprlock (security-critical -- a broken lock screen can fail open,
+         not just annoy you), hypridle (confirmed actively running, tightly
+         IPC-coupled to hyprland/hyprlock), and xdg-desktop-portal-hyprland
+         (other apps like steam/obs-studio depend on it working) all stay
+         pacman-only permanently -- no realistic upside (nixpkgs versions
+         already match pacman's almost exactly) against a uniquely severe
+         downside (a broken live desktop, not just a broken command).
+         hyprpaper isn't even running -- mpvpaper is the real live-wallpaper
+         mechanism, confirmed via WallpaperPicker.qml. waybar/rofi/swaync/
+         cliphist were left alone too: same GTK/layer-shell GPU-rendering
+         uncertainty as the Phase 6 Electron apps, and testing them for real
+         would mean launching a competing instance against the live bar/
+         notifications mid-session -- not a risk worth taking for apps that
+         already work fine on pacman.
+Not started: Phase 9 (final cleanup)
 
 GPU acceleration under Nix (read before touching Phase 7/8)
 -------------------------------------------------------------
