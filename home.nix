@@ -6,6 +6,7 @@
     ./modules/cli.nix
     ./modules/git.nix
     ./modules/shell.nix
+    ./modules/aliases.nix
     ./modules/dev.nix
   ];
 
