@@ -8,6 +8,7 @@
     ./modules/shell.nix
     ./modules/aliases.nix
     ./modules/dev.nix
+    ./modules/secrets.nix
   ];
 
   home.username = "sicmundus";

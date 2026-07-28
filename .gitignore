@@ -1,3 +1,8 @@
 result
 result-*
 .direnv/
+
+# Contains public keys tied to a real identity (SSH key comment = real email).
+# Not secret, just kept out of the public repo on request. Recreate locally
+# from ~/.ssh/id_ed25519.pub before running `agenix -e` for the first time.
+secrets/secrets.nix
