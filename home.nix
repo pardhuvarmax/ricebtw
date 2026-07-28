@@ -10,6 +10,7 @@
     ./modules/dev.nix
     ./modules/secrets.nix
     ./modules/editors.nix
+    ./modules/gui.nix
   ];
 
   home.username = "sicmundus";

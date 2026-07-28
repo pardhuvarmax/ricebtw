@@ -17,7 +17,12 @@
     inputs@{ nixpkgs, home-manager, ... }:
     let
       system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
+      # allowUnfree: needed for proprietary-but-free-as-in-beer GUI apps
+      # (obsidian first; more of these are likely as Phase 6 continues).
+      pkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+      };
     in
     {
       homeConfigurations."sicmundus" = home-manager.lib.homeManagerConfiguration {
