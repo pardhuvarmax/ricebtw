@@ -37,8 +37,17 @@ Status
 Done:  Phase 0 (repo skeleton), Phase 1 (CLI), Phase 3 (shell), Phase 4 (dev),
        Phase 5 (Neovim), Phase 6 (GUI apps, partial -- see GPU note)
 Skipped for now: Phase 2 (git) -- left on pacman's git, revisit later
-Not started: Phase 7 (fonts/themes), Phase 8 (Hyprland/Waybar/etc), Phase 9
-             (final cleanup)
+Skipped: Phase 7 (fonts/themes/icons/cursor) -- investigated, deliberately
+         not migrating. Icons are a git-managed collection in
+         ~/.local/share/icons (built on the "illogical-impulse" Hyprland
+         dotfiles project, judging by illogical-impulse.svg in there), GTK/
+         color theming is actively driven by matugen's generated templates
+         (kitty, quickshell, qt5ct/qt6ct, Hyprland colors.conf, cava,
+         swayosd, neovim), and the one font actually in use (JetBrainsMono
+         Nerd Font, in kitty) is hard-blocked from pacman removal by yazi
+         anyway. Nothing here would gain from a Nix package -- it's already
+         better managed outside of pacman and Nix both.
+Not started: Phase 8 (Hyprland/Waybar/etc), Phase 9 (final cleanup)
 
 GPU acceleration under Nix (read before touching Phase 7/8)
 -------------------------------------------------------------
