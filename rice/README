@@ -10,7 +10,16 @@ setup, and Home Manager taking it over declaratively would fight matugen and
 the compositor for control of files they actively regenerate.
 
 config/   copies of ~/.config/{hypr,waybar,kitty,rofi,swaync,wlogout,foot,
-          matugen,fastfetch,qt5ct,qt6ct,cava}
+          matugen,fastfetch,qt5ct,qt6ct,cava,fish,gtk-3.0,illogical-impulse,
+          spicetify}, plus config/nvim (just init.lua, lazy-lock.json,
+          matugen_colors.lua -- not the 404M lazy.nvim plugin data dir under
+          ~/.local/share/nvim, which is reproducible from the lockfile anyway)
+
+The actual live quickshell config is config/hypr/scripts/quickshell/Shell.qml
+(that's what Hyprland's exec-once actually loads). The top-level
+~/.config/quickshell directory (which had an "ii"/illogical-impulse module,
+plus hypr-overview/whisker/hypr-lens/music) is NOT used -- confirmed inactive
+and deliberately left out of this backup.
 home/     copies of ~/.p10k.zsh, ~/.gtkrc-2.0, ~/.aliases
 boot/     Plymouth + GRUB theme sources, copied from ~/Downloads/archplys
           (archply1/arch-mac-style = active Plymouth theme, archply2/
@@ -29,3 +38,17 @@ OpenWeather API key in it. Removed from this copy, replaced with
 untracked ~/.config/hypr/scripts/quickshell/calendar/.env. If you ever want
 this properly secret-managed instead of sitting in plaintext, it's a good
 candidate for the agenix setup in modules/secrets.nix.
+
+Deliberately excluded, checked and rejected as not being config:
+~/.config/zsh (that's not rice, it's live runtime data -- your actual shell
+history file and compiled completion cache, exactly what shell.nix's
+history.path points at), ~/.config/rice-cooker (despite the name, this is
+a Chromium/Electron app's cache/profile directory -- Code Cache, GPUCache,
+Trust Tokens, Crashpad -- not theme config), and the top-level
+~/.config/quickshell (confirmed inactive, see above -- it had real AI/cloud
+API integration code for Gemini/OpenAI/Mistral/Google Cloud plus keyring
+scripts; checked carefully before deciding to drop it, all of it reads
+credentials from the system keyring at runtime rather than storing anything
+in plaintext, so its exclusion here is about relevance, not safety).
+
+Nothing hardcoded was found anywhere in this backup.
