@@ -232,5 +232,31 @@
     music = "rmpc";
     mysql = "mysql -u root -p";
     linutil = "curl -fsSL https://christitus.com/linux | sh";
+
+    # Nix / Home Manager workflow -- matches the switch/build/check/commit
+    # loop this repo is actually maintained with.
+    hms = "cd ~/.config/home-manager && git add -A && home-manager switch --flake .#sicmundus";
+    hmb = "cd ~/.config/home-manager && git add -A && nix build .#homeConfigurations.sicmundus.activationPackage --no-link --print-out-paths";
+    hmg = "home-manager generations";
+    hmcd = "cd ~/.config/home-manager";
+    hmc = "cd ~/.config/home-manager && nix flake check --no-build";
+    hmgc = "nix store gc";
+    hml = "git -C ~/.config/home-manager log --oneline -10";
+    hmp = "git -C ~/.config/home-manager push";
+    hmnews = "home-manager news";
+
+    # General Nix
+    nsh = "nix shell nixpkgs#";
+    nrun = "nix run nixpkgs#";
+    nsearch = "nix search nixpkgs";
+    nshow = "nix flake show";
+    nup = "cd ~/.config/home-manager && nix flake update";
+    nrepl = "nix repl";
+    nopt = "nix store optimise";
+    nwhy = "nix why-depends ~/.config/home-manager#homeConfigurations.sicmundus.activationPackage";
+
+    # Prune every generation except current, then garbage collect -- the
+    # two-step cleanup done manually earlier, now a single command.
+    ngc = "home-manager generations | grep -v '(current)' | awk '{print $5}' | xargs -r home-manager remove-generations; nix store gc";
   };
 }
