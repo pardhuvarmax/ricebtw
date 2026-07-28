@@ -1,3 +1,8 @@
 Plain copies of loose dotfiles from ~ (not ~/.config): .p10k.zsh, .gtkrc-2.0,
 .aliases. See the parent rice/README for details. Not managed or symlinked by
 Home Manager -- editing a file here does nothing to your live config.
+
+Pictures/Wallpapers/ -- full copy of ~/Pictures/Wallpapers (2226 files, ~3.7G),
+the wallpaper pool matugen/hyprpaper pick from. Large and tracked in git
+knowingly (repo is public); this is the one folder in rice/ that's about
+storage, not documentation.
