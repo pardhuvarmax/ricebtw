@@ -43,6 +43,30 @@
     wev
     wtype
     wmctrl
+
+    # Second leaf-tool sweep. All confirmed "Required By: None" via
+    # `pacman -Qi`, except tesseract/tesseract-data-eng which only require
+    # each other (nothing external depends on either) -- nixpkgs bundles
+    # both engine and language data in one `tesseract` derivation.
+    ani-cli
+    gifski
+    irssi
+    weechat
+    znc
+    luarocks
+    nyx
+    pamixer
+    sparse
+    stress-ng
+    yq
+    wl-clip-persist
+    tesseract
+
+    # Was never on pacman at all -- fish's config.fish calls
+    # `starship init fish` unconditionally and was broken (binary missing
+    # entirely, not shadowed) until this was added. Unrelated to the CLI
+    # sweep otherwise, just fixed in the same batch.
+    starship
   ];
 
   programs.bat = {
