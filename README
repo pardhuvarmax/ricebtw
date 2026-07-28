@@ -22,16 +22,50 @@ modules/shell.nix     zsh: history, completion, autosuggestions, syntax
 modules/aliases.nix   all shell aliases, deduped from the old .zshrc + ~/.aliases
 modules/dev.nix       dev toolchains (go, rustup, nodejs, python3, pipx,
                        cmake, ninja, llvm, clang)
+modules/secrets.nix   agenix wiring (flake input + CLI); no secrets defined yet
+modules/editors.nix   Neovim binary only -- ~/.config/nvim is self-managed lazy.nvim
+modules/gui.nix       GUI apps that actually work under Nix (see GPU note below)
+secrets/secrets.nix   agenix recipient manifest, gitignored (has a real email
+                       in the SSH key comment) -- recreate from
+                       ~/.ssh/id_ed25519.pub if this repo is ever cloned fresh
 backup/               the original stock `home-manager init` output, kept
                        for reference, not imported by anything
 
 Status
 ------
 
-Done:  Phase 0 (repo skeleton), Phase 1 (CLI), Phase 3 (shell), Phase 4 (dev)
+Done:  Phase 0 (repo skeleton), Phase 1 (CLI), Phase 3 (shell), Phase 4 (dev),
+       Phase 5 (Neovim), Phase 6 (GUI apps, partial -- see GPU note)
 Skipped for now: Phase 2 (git) -- left on pacman's git, revisit later
-Not started: Phase 5 (editors/Neovim), Phase 6 (GUI apps), Phase 7 (fonts/
-             themes), Phase 8 (Hyprland/Waybar/etc), Phase 9 (final cleanup)
+Not started: Phase 7 (fonts/themes), Phase 8 (Hyprland/Waybar/etc), Phase 9
+             (final cleanup)
+
+GPU acceleration under Nix (read before touching Phase 7/8)
+-------------------------------------------------------------
+
+Nix's bundled Mesa can't reach Arch's real GPU driver stack out of the box:
+it looks for drivers at /run/opengl-driver (a NixOS-only convention). Fixed
+the first hop with a symlink (/run/opengl-driver -> /usr, made permanent via
+/etc/tmpfiles.d/opengl-driver.conf) -- this is safe, additive, doesn't touch
+actual drivers/Mesa, just tells Nix binaries where Arch's already-working
+ones live.
+
+That fixes simple cases, but Electron/Chromium apps (tested: Obsidian) hit a
+second wall: Arch's dri_gbm.so needs libgallium-*.so, which lives one
+directory up (/usr/lib, not /usr/lib/gbm). Nix's dynamic linker doesn't
+consult /etc/ld.so.cache the way a native Arch process does, so it can't find
+it. Tried LD_LIBRARY_PATH=/usr/lib as a blanket fix -- this broke worse: it
+loaded Arch's glibc ahead of Nix's own and crashed with a GLIBC_PRIVATE
+symbol mismatch. Do not try that again without scoping it far more narrowly.
+
+Decision: firefox, brave, obsidian, mpv stay pacman-only permanently (same
+tier as python/nodejs -- see below). flameshot was verified clean (no GL/EGL
+errors, doesn't need heavy compositing) and is Nix-managed. The real fix for
+GPU-heavy apps, if ever wanted, is nixGL (github.com/guibou/nixGL) -- wraps
+specific launches with a curated, correctly-scoped library path instead of a
+blanket one. Not set up. Expect to hit this again in Phase 7/8 for anything
+using GTK/Wayland layer-shell rendering (Waybar, Rofi, Hyprlock) -- check
+each one for GL/EGL errors before assuming it'll behave like flameshot did.
 
 What stays on pacman permanently (not a "not done yet", a deliberate never):
 
@@ -47,6 +81,11 @@ What stays on pacman permanently (not a "not done yet", a deliberate never):
 For all of these, the Nix-provided copy is installed and shadows the pacman
 one on PATH for your own use; pacman's copy is never removed because
 something else on the system depends on it existing.
+
+  firefox, brave, obsidian, mpv   GPU acceleration doesn't work cleanly
+                                   through Nix's Mesa (see note above) --
+                                   these have NO Nix-provided copy at all,
+                                   pacman's is the only one and stays that way
 
 Everything else that got migrated (bat, eza, fd, ripgrep, btop, fastfetch,
 lazygit, gh, direnv, atuin, the zsh plugin packages, starship, rustup) had
