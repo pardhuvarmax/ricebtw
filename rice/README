@@ -12,6 +12,16 @@ the compositor for control of files they actively regenerate.
 config/   copies of ~/.config/{hypr,waybar,kitty,rofi,swaync,wlogout,foot,
           matugen,fastfetch,qt5ct,qt6ct,cava}
 home/     copies of ~/.p10k.zsh, ~/.gtkrc-2.0, ~/.aliases
+boot/     Plymouth + GRUB theme sources, copied from ~/Downloads/archplys
+          (archply1/arch-mac-style = active Plymouth theme, archply2/
+          arch-slider-and-glow = the other installed Plymouth theme, fluent =
+          the active GRUB theme). plymouthd.conf says which Plymouth theme is
+          active (Theme=arch-mac-style); grub-theme-setting.txt is the
+          GRUB_THEME line from /etc/default/grub. To actually reinstall
+          either: Plymouth themes go in /usr/share/plymouth/themes/<name>/,
+          then `sudo plymouth-set-default-theme -R <name>`; GRUB theme goes
+          in /usr/share/grub/themes/<name>/, set GRUB_THEME in
+          /etc/default/grub, then `sudo grub-mkconfig -o /boot/grub/grub.cfg`.
 
 Known exclusion: config/hypr/scripts/quickshell/calendar/.env had a real
 OpenWeather API key in it. Removed from this copy, replaced with
