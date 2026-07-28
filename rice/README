@@ -11,9 +11,26 @@ the compositor for control of files they actively regenerate.
 
 config/   copies of ~/.config/{hypr,waybar,kitty,rofi,swaync,wlogout,foot,
           matugen,fastfetch,qt5ct,qt6ct,cava,fish,gtk-3.0,illogical-impulse,
-          spicetify}, plus config/nvim (just init.lua, lazy-lock.json,
-          matugen_colors.lua -- not the 404M lazy.nvim plugin data dir under
-          ~/.local/share/nvim, which is reproducible from the lockfile anyway)
+          spicetify,fuzzel,kde-material-you-colors,Kvantum}, plus:
+          config/nvim (just init.lua, lazy-lock.json, matugen_colors.lua --
+            not the 404M lazy.nvim plugin data dir under ~/.local/share/nvim,
+            which is reproducible from the lockfile anyway)
+          config/fontconfig (just fonts.conf)
+          config/mpv (just mpv.conf)
+          config/{chrome-flags.conf,code-flags.conf,darklyrc,dolphinrc,
+            kdeglobals,konsolerc} -- loose top-level files, not directories
+
+          The fuzzel/kde-material-you-colors/Kvantum/mpv/KDE-file additions
+          were found by reading ~/.config/illogical-impulse/installed_listfile
+          (the ii installer's own manifest of every file it touched
+          system-wide) and cross-checking what still exists and isn't covered
+          above. Most of that manifest is quickshell/ii/* internal paths,
+          already confirmed unused (see below) and not worth reading further.
+
+A parallel, non-git local copy of all of this also lives at
+~/.config/hyprbackup, kept in sync the same way -- the only difference is it
+keeps the real OpenWeather API key (see below) since it never leaves the
+machine.
 
 The actual live quickshell config is config/hypr/scripts/quickshell/Shell.qml
 (that's what Hyprland's exec-once actually loads). The top-level

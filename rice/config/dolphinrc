@@ -1,0 +1,24 @@
+[ContextMenu]
+ShowCopyMoveMenu=true
+
+[DetailsMode]
+PreviewSize=32
+
+[General]
+GlobalViewProps=false
+ShowFullPath=true
+ShowStatusBar=FullWidth
+Version=202
+
+[KFileDialog Settings]
+Places Icons Auto-resize=false
+Places Icons Static Size=22
+
+[MainWindow]
+MenuBar=Disabled
+
+[PreviewSettings]
+Plugins=appimagethumbnail,audiothumbnail,comicbookthumbnail,cursorthumbnail,djvuthumbnail,ebookthumbnail,exrthumbnail,directorythumbnail,imagethumbnail,jpegthumbnail,kraorathumbnail,windowsexethumbnail,windowsimagethumbnail,opendocumentthumbnail,svgthumbnail,gsf-office
+
+[Search]
+Location=Everywhere
