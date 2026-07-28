@@ -16,7 +16,15 @@
     llvm
     clang
     nodejs
-    python3
+    # python3 deliberately NOT here: it shadowed /usr/bin/python3 on PATH and
+    # broke virt-manager (#!/usr/bin/env python3 -- Arch's system python has
+    # python-gobject installed, Nix's bare one doesn't, so `import gi` failed).
+    # Same risk applies to any Arch tool using `env python3` for system
+    # integration (dbus, cairo, i3ipc, etc). For actual Python dev work, use
+    # direnv per-project (`nix shell nixpkgs#python3` or a project flake.nix)
+    # instead of a global package -- keeps it scoped, never shadows the
+    # system interpreter other tools depend on.
+    #
     # Upstream test suite bug in this nixpkgs snapshot: tests/test_inject.py has a
     # pytest parametrize arg-count mismatch, unrelated to pipx's actual runtime behavior.
     # The test run is gated by doInstallCheck (not doCheck) for this package.
