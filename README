@@ -1,0 +1,78 @@
+archbtw
+=======
+
+Home Manager configuration for sicmundus, layered on top of a normal Arch
+Linux install. This is NOT NixOS. Arch (pacman) still owns the kernel,
+bootloader, firmware, drivers, systemd, networking, filesystems, DBus, and
+PipeWire. Nix + Home Manager owns the user environment on top of it: CLI
+tools, dev toolchains, shell config, dotfiles, and (eventually) the Hyprland
+desktop stack.
+
+Layout
+------
+
+flake.nix            entry point, pins nixpkgs-unstable + home-manager
+home.nix              top-level config, wires up the modules below
+modules/packages.nix  catch-all for packages with no dedicated module yet
+modules/cli.nix       CLI utilities (bat, eza, fd, ripgrep, fzf, jq, btop,
+                       fastfetch, lazygit, gh, direnv, atuin)
+modules/git.nix       reserved for programs.git (not done yet, see below)
+modules/shell.nix     zsh: history, completion, autosuggestions, syntax
+                       highlighting, fzf-tab, Powerlevel10k, env vars
+modules/aliases.nix   all shell aliases, deduped from the old .zshrc + ~/.aliases
+modules/dev.nix       dev toolchains (go, rustup, nodejs, python3, pipx,
+                       cmake, ninja, llvm, clang)
+backup/               the original stock `home-manager init` output, kept
+                       for reference, not imported by anything
+
+Status
+------
+
+Done:  Phase 0 (repo skeleton), Phase 1 (CLI), Phase 3 (shell), Phase 4 (dev)
+Skipped for now: Phase 2 (git) -- left on pacman's git, revisit later
+Not started: Phase 5 (editors/Neovim), Phase 6 (GUI apps), Phase 7 (fonts/
+             themes), Phase 8 (Hyprland/Waybar/etc), Phase 9 (final cleanup)
+
+What stays on pacman permanently (not a "not done yet", a deliberate never):
+
+  zsh          it's /bin/zsh, your actual login shell in /etc/passwd
+  python       hard-required by ~90 packages incl. reflector, kitty, meson
+  nodejs/npm   hard-required by zed
+  ninja        hard-required by meson
+  gdb          hard-required by debugedit
+  fzf          hard-required by ani-cli, downgrade, fzf-tab-git
+  jq           hard-required by yq
+  llvm/clang   only soft/optional reverse deps, low priority to touch
+
+For all of these, the Nix-provided copy is installed and shadows the pacman
+one on PATH for your own use; pacman's copy is never removed because
+something else on the system depends on it existing.
+
+Everything else that got migrated (bat, eza, fd, ripgrep, btop, fastfetch,
+lazygit, gh, direnv, atuin, the zsh plugin packages, starship, rustup) had
+its pacman package fully removed after verification.
+
+Workflow
+--------
+
+Never edit ~/.zshrc, ~/.gitconfig, etc directly again -- they're symlinks
+into the Nix store now. Edit the module, then:
+
+  cd ~/.config/home-manager
+  git add -A                     # flakes only see git-tracked files
+  nix flake check --no-build     # catches eval errors before building
+  nix build .#homeConfigurations.sicmundus.activationPackage --no-link --print-out-paths
+  # inspect the printed store path's home-files/ if the change is delicate
+  home-manager switch --flake .#sicmundus
+  git commit -m "..."            # one commit per verified change
+
+Rollback
+--------
+
+  home-manager generations               # list all generations
+  /nix/store/.../activate                # re-activate an older one directly
+  git log --oneline                      # source-level history
+  git revert / git reset --hard <commit> # undo a config change at the source
+
+Removing a pacman package is only ever done after the Nix replacement is
+installed, built, switched to, and functionally verified -- never before.
