@@ -15,6 +15,34 @@
     gh
     direnv
     atuin
+
+    # Leaf tools swept in later: verified via `pacman -Qi` that nothing on
+    # pacman requires any of these (all "Required By: None"), so plain
+    # migration candidates -- no dual-install caveat needed.
+    zellij
+    yazi
+    zoxide
+    yt-dlp
+    ncdu
+    cloc
+    bc
+    socat
+    pv
+    tree-sitter
+    cbonsai
+    asciiquarium
+    gum
+    tty-clock
+    ttyper
+    p7zip # pacman package is "7zip"; nixpkgs attribute is "p7zip"
+    inotify-tools
+    w3m
+    lynx
+    mpc # MPD CLI client; nixpkgs renamed mpc-cli -> mpc
+    rmpc
+    wev
+    wtype
+    wmctrl
   ];
 
   programs.bat = {
