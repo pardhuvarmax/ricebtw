@@ -64,7 +64,11 @@ Skipped: Phase 8 (Hyprland/Waybar/Hyprlock/Hypridle/Hyprpaper/Rofi/
          would mean launching a competing instance against the live bar/
          notifications mid-session -- not a risk worth taking for apps that
          already work fine on pacman.
-Not started: Phase 9 (final cleanup)
+Done:  Phase 9 (final cleanup) -- 12 orphaned packages left over from the
+       Neovim migration removed (tree-sitter-*, libvterm, msgpack-c, etc,
+       plus tree-sitter itself once it became a second-order orphan), pacman
+       db verified clean, nix store gc'd (1792 dead paths, 1005.6 MiB freed,
+       all 9 generations and current activation verified intact afterward)
 
 GPU acceleration under Nix (read before touching Phase 7/8)
 -------------------------------------------------------------
