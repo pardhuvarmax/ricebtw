@@ -30,6 +30,9 @@ secrets/secrets.nix   agenix recipient manifest, gitignored (has a real email
                        ~/.ssh/id_ed25519.pub if this repo is ever cloned fresh
 backup/               the original stock `home-manager init` output, kept
                        for reference, not imported by anything
+rice/                 plain backup COPY of the live Hyprland/matugen desktop
+                       dotfiles (hypr, waybar, kitty, rofi, swaync, etc) --
+                       not managed or symlinked by Home Manager, see rice/README
 
 Status
 ------

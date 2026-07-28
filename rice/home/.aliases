@@ -1,0 +1,251 @@
+# =========================
+# SYSTEM & PACKAGE
+# =========================
+alias update='paru -Syu --noconfirm'
+alias upgrade='paru -Syu'
+alias install='paru -S'
+alias remove='paru -Rns'
+alias search='paru -Ss'
+alias orphan='paru -Qtdq'
+alias cleanorphans='paru -Rns $(paru -Qtdq)'
+alias pkglist='paru -Q'
+alias pkginfo='paru -Qi'
+alias fixkeys='sudo pacman-key --refresh-keys'
+alias mirrors="sudo reflector --latest 10 --sort rate --save /etc/pacman.d/mirrorlist"
+alias cleanpkg='paru -Sc'
+alias deepclean='paru -Scc'
+alias reinstall='paru -S $(paru -Qnq)'
+alias pacdiff='sudo pacdiff'
+alias unlock='sudo rm /var/lib/pacman/db.lck'
+alias downgrade='sudo downgrade'
+alias cache='du -sh ~/.cache'
+alias diskuse='du -sh *'
+
+# =========================
+# FILE MANAGEMENT
+# =========================
+alias ls='eza --icons --group-directories-first'
+alias ll='eza -la --icons --group-directories-first'
+alias lt='eza --tree --icons'
+alias l='eza -l'
+alias la='eza -a'
+alias l1='eza -1'
+alias lgit='eza --git'
+alias ltime='eza -l --sort=modified'
+alias lsize='eza -l --sort=size'
+
+alias cp='cp -iv'
+alias mv='mv -iv'
+alias rm='rm -iv'
+alias mkdir='mkdir -pv'
+
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+
+alias home='cd ~'
+alias desk='cd ~/Desktop'
+alias docs='cd ~/Documents'
+alias down='cd ~/Downloads'
+alias vids='cd ~/Videos'
+alias pics='cd ~/Pictures'
+alias dev='cd ~/Desktop/Dev/'
+
+alias tree='tree -C'
+alias grep='grep --color=auto'
+alias df='df -h'
+alias free='free -h'
+
+# =========================
+# NAVIGATION
+# =========================
+alias c='clear'
+alias q='exit'
+alias h='history'
+alias j='jobs -l'
+alias path='echo -e ${PATH//:/\\n}'
+alias reload='source ~/.zshrc'
+
+alias back='cd -'
+alias root='cd /'
+alias etc='cd /etc'
+alias var='cd /var'
+alias usr='cd /usr'
+alias opt='cd /opt'
+
+alias f='find . -name'
+# alias ff='find . -type f -name'
+alias fd='find . -type d -name'
+
+# =========================
+# SEARCH & NETWORK
+# =========================
+alias ports='netstat -tulanp'
+alias listen='ss -tulnp'
+alias myip='curl ifconfig.me'
+alias localip='ip a'
+alias pingg='ping google.com'
+alias pathsize='du -sh .'
+alias biggest='du -ah . | sort -rh | head -20'
+alias openports='lsof -i'
+alias proc='ps aux | less'
+alias psg='ps aux | grep -i'
+
+# =========================
+# PERFORMANCE
+# =========================
+alias top='htop'
+alias cpu='htop'
+alias mem='free -m'
+alias disk='iotop'
+alias killall='killall -v'
+alias k9='kill -9'
+alias pstree='pstree -p'
+alias usage='top -o %MEM'
+alias cpuload='uptime'
+alias temps='sensors'
+
+# =========================
+# DOCKER
+# =========================
+alias dps='docker ps'
+alias dpa='docker ps -a'
+alias di='docker images'
+alias drm='docker rm'
+alias drmi='docker rmi'
+alias dstart='docker start'
+alias dstop='docker stop'
+alias dexec='docker exec -it'
+alias dlogs='docker logs'
+alias dprune='docker system prune -a'
+alias dclean='docker container prune'
+alias dnet='docker network ls'
+alias dvol='docker volume ls'
+alias dup='docker compose up -d'
+alias ddown='docker compose down'
+
+# =========================
+# KUBERNETES
+# =========================
+alias k='kubectl'
+alias kg='kubectl get'
+alias kgp='kubectl get pods'
+alias kgs='kubectl get svc'
+alias kgn='kubectl get nodes'
+alias kd='kubectl describe'
+alias kdel='kubectl delete'
+alias klog='kubectl logs'
+alias kexec='kubectl exec -it'
+alias kctx='kubectl config use-context'
+alias kns='kubectl config set-context --current --namespace'
+alias kapply='kubectl apply -f'
+alias ktop='kubectl top pods'
+
+# =========================
+# CYBERSEC
+# =========================
+alias sniff='tcpdump -i any'
+alias scan='nmap -sC -sV'
+alias fastscan='nmap -T4 -F'
+alias vuln='nmap --script vuln'
+alias whois='whois'
+alias dns='dig'
+alias http='curl -I'
+alias headers='curl -I'
+alias trace='traceroute'
+alias netwatch='watch -n1 ss -tulnp'
+
+# =========================
+# DEV
+# =========================
+alias vim='nvim'
+alias code='code .'
+alias py='python3'
+alias pip='pip3'
+alias serve='python3 -m http.server'
+alias json='python -m json.tool'
+alias build='npm run build'
+alias start='npm start'
+alias ndev='npm run dev'
+alias test='npm test'
+
+# =========================
+# GIT
+# =========================
+alias g='git'
+alias gs='git status'
+alias ga='git add'
+alias gaa='git add .'
+alias gc='git commit -m'
+alias gca='git commit --amend'
+alias gp='git push'
+alias gpl='git pull'
+alias gcl='git clone'
+alias gb='git branch'
+alias gco='git checkout'
+alias gcb='git checkout -b'
+alias gl='git log --oneline --graph --all'
+alias gd='git diff'
+alias gds='git diff --staged'
+alias stash='git stash'
+alias stashp='git stash pop'
+alias undo='git reset --soft HEAD~1'
+alias hardundo='git reset --hard HEAD~1'
+
+# =========================
+# SYSTEM CONTROL
+# =========================
+alias reboot='sudo reboot'
+alias shutdown='sudo shutdown now'
+alias suspend='systemctl suspend'
+alias lock='loginctl lock-session'
+alias logout='loginctl terminate-session $XDG_SESSION_ID'
+alias services='systemctl list-units --type=service'
+alias startsvc='sudo systemctl start'
+alias stopsvc='sudo systemctl stop'
+alias enablesvc='sudo systemctl enable'
+alias disablesvc='sudo systemctl disable'
+alias statsvc='systemctl status'
+
+# =========================
+# UTILITIES
+# =========================
+alias cat='bat --theme=base16'
+alias weather='curl wttr.in'
+alias clock='watch -n1 date'
+alias cls='clear'
+alias random='shuf -n1 /usr/share/dict/words'
+alias calc='python -i -c "from math import *"'
+alias speed='speedtest-cli'
+alias matrix='cmatrix'
+alias pipes='~/pipes.sh/pipes.sh'
+# alias ff='fastfetch'
+
+# =========================
+# ARCHIVE
+# =========================
+alias extract='tar -xvf'
+alias compress='tar -czvf'
+alias untar='tar -xvf'
+alias wgetc='wget -c'
+alias curlh='curl -I'
+
+# =========================
+# HISTORY / DEBUG
+# =========================
+alias hist10='history | tail -10'
+alias histgrep='history | grep'
+alias sudo!!='sudo !!'
+alias fixperm='chmod -R 755'
+
+# =========================
+# EXTRA POWER
+# =========================
+alias now='date +"%T"'
+alias today='date +"%Y-%m-%d"'
+alias epoch='date +%s'
+alias uuid='cat /proc/sys/kernel/random/uuid'
+alias pathadd='export PATH=$PATH:'
+alias reloadbash='source ~/.bashrc'
+alias reloadzsh='source ~/.zshrc'

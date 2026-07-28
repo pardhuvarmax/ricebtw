@@ -1,0 +1,21 @@
+This is a plain COPY of the live desktop dotfiles, not a live one -- nothing
+here is managed, symlinked, or read by Home Manager. It exists purely as a
+version-controlled backup. Editing a file in here does nothing to your actual
+running config; edit the real file under ~/.config or ~ instead, then re-copy
+here if you want the backup updated.
+
+Deliberately left out of Phase 7/8 of the Nix migration (see the main
+README) -- this is the live matugen-driven theming + Hyprland/quickshell
+setup, and Home Manager taking it over declaratively would fight matugen and
+the compositor for control of files they actively regenerate.
+
+config/   copies of ~/.config/{hypr,waybar,kitty,rofi,swaync,wlogout,foot,
+          matugen,fastfetch,qt5ct,qt6ct,cava}
+home/     copies of ~/.p10k.zsh, ~/.gtkrc-2.0, ~/.aliases
+
+Known exclusion: config/hypr/scripts/quickshell/calendar/.env had a real
+OpenWeather API key in it. Removed from this copy, replaced with
+.env.example (a template). The real key stays only in the live,
+untracked ~/.config/hypr/scripts/quickshell/calendar/.env. If you ever want
+this properly secret-managed instead of sitting in plaintext, it's a good
+candidate for the agenix setup in modules/secrets.nix.

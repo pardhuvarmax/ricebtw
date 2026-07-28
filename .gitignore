@@ -6,3 +6,7 @@ result-*
 # Not secret, just kept out of the public repo on request. Recreate locally
 # from ~/.ssh/id_ed25519.pub before running `agenix -e` for the first time.
 secrets/secrets.nix
+
+# Defense-in-depth: rice/ is a plain backup copy of live dotfiles, scanned for
+# secrets before each copy, but any .env that slips in should never be tracked.
+rice/**/.env
