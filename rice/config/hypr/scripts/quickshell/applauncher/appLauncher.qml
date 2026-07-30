@@ -146,7 +146,8 @@ Item {
     }
 
     function launchApp(execStr) {
-        Quickshell.execDetached(["hyprctl", "dispatch", "exec", "--", execStr]);
+        var luaEscaped = execStr.replace(/\\/g, "\\\\").replace(/"/g, "\\\"");
+        Quickshell.execDetached(["hyprctl", "dispatch", "hl.dsp.exec_cmd(\"" + luaEscaped + "\")"]);
         Quickshell.execDetached(["bash", Quickshell.env("HOME") + "/.config/hypr/scripts/qs_manager.sh", "close"]);
     }
 

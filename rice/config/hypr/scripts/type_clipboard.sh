@@ -19,17 +19,17 @@ pin_pid=""
 
 restore() {
     [ -n "$pin_pid" ] && kill "$pin_pid" 2>/dev/null
-    hyprctl keyword input:follow_mouse "$orig_follow_mouse" >/dev/null
+    hyprctl eval "hl.config({ input = { follow_mouse = $orig_follow_mouse } })" >/dev/null
 }
 trap restore EXIT
 
-hyprctl keyword input:follow_mouse 0 >/dev/null
+hyprctl eval 'hl.config({ input = { follow_mouse = 0 } })' >/dev/null
 
 if [ -n "$target" ]; then
-    hyprctl dispatch focuswindow "address:$target" >/dev/null
+    hyprctl dispatch "hl.dsp.focus({ window = \"address:$target\" })" >/dev/null
     (
         while true; do
-            hyprctl dispatch focuswindow "address:$target" >/dev/null 2>&1
+            hyprctl dispatch "hl.dsp.focus({ window = \"address:$target\" })" >/dev/null 2>&1
             sleep 0.1
         done
     ) &
