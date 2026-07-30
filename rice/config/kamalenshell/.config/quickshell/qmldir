@@ -1,0 +1,54 @@
+singleton Colors 1.0 Colors.qml
+singleton UIState 1.0 UIState.qml
+singleton Animations 1.0 Animations.qml
+singleton L10n 1.0 L10n.qml
+singleton MangoConfig 1.0 MangoConfig.qml
+singleton StyleProfiles 1.0 StyleProfiles.qml
+singleton Metrics 1.0 Metrics.qml
+singleton Skins 1.0 Skins.qml
+singleton Runtime 1.0 Runtime.qml
+Bar 1.0 Bar.qml
+Dashboard 1.0 Dashboard.qml
+SettingsWindow 1.0 SettingsWindow.qml
+Launcher 1.0 Launcher.qml
+Wallpaper 1.0 Wallpaper.qml
+LiveWallpaperTab 1.0 LiveWallpaperTab.qml
+Music 1.0 Music.qml
+Calendar 1.0 Calendar.qml
+NotificationPopup 1.0 NotificationPopup.qml
+Lockscreen 1.0 Lockscreen.qml
+PowerMenu 1.0 PowerMenu.qml
+LayoutMenu 1.0 LayoutMenu.qml
+ClipboardMenu 1.0 ClipboardMenu.qml
+PolkitDialog 1.0 PolkitDialog.qml
+PopupBase 1.0 PopupBase.qml
+TrayBar 1.0 TrayBar.qml
+TrayPopup 1.0 TrayPopup.qml
+singleton TrayState 1.0 TrayState.qml
+singleton BluetoothState 1.0 BluetoothState.qml
+BluetoothPopup 1.0 BluetoothPopup.qml
+MIcon 1.0 MIcon.qml
+AudioIndicator 1.0 AudioIndicator.qml
+HandleStyleSwitch 1.0 HandleStyleSwitch.qml
+PillButton 1.0 PillButton.qml
+ConfigSection 1.0 components/ConfigSection.qml
+ConfigSlider 1.0 components/ConfigSlider.qml
+ConfigToggle 1.0 components/ConfigToggle.qml
+ConfigSpinner 1.0 components/ConfigSpinner.qml
+ConfigColorRow 1.0 components/ConfigColorRow.qml
+MaterialSurface 1.0 components/MaterialSurface.qml
+MaterialButton 1.0 components/MaterialButton.qml
+MaterialTrack 1.0 components/MaterialTrack.qml
+SkinPreview 1.0 components/SkinPreview.qml
+TileButton 1.0 components/TileButton.qml
+InfoRow 1.0 components/InfoRow.qml
+SliderRow 1.0 components/SliderRow.qml
+QuickTab 1.0 tabs/QuickTab.qml
+DisplayTab 1.0 tabs/DisplayTab.qml
+MediaTab 1.0 tabs/MediaTab.qml
+SystemTab 1.0 tabs/SystemTab.qml
+LookTab 1.0 tabs/LookTab.qml
+MangoTab 1.0 tabs/MangoTab.qml
+BindsTab 1.0 tabs/BindsTab.qml
+WindowRulesTab 1.0 tabs/WindowRulesTab.qml
+MonitorsTab 1.0 tabs/MonitorsTab.qml

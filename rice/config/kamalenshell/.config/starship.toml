@@ -1,0 +1,152 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """
+[ $os ](bg:color1 fg:color_bg)\
+$username\
+$shell\
+$hostname\
+[](bg:color2 fg:color1)\
+$directory\
+[](bg:color3 fg:color2)\
+$git_branch\
+$git_status\
+[](bg:color4 fg:color3)\
+$c\
+$rust\
+$golang\
+$nodejs\
+$php\
+$java\
+$kotlin\
+$haskell\
+$python\
+$cmd_duration\
+[](fg:color4)\
+$character"""
+
+palette = 'iris'
+
+[palettes.iris]
+color_bg = '#163c5d'
+color1 = '#9c8cf4'
+color2 = '#1d4f7a'
+color3 = '#487ba7'
+color4 = '#f8f8c1'
+text_light = '#f8f8c1'
+text_dark = '#163c5d'
+
+[os]
+disabled = false
+style = "bg:color1 fg:color_bg"
+
+[os.symbols]
+# Distros pedidas
+CachyOS = ""        # não tem icon dedicado, usa o Arch
+Gentoo = ""
+NixOS = ""
+Void = ""
+Zorin = ""
+Mint = ""
+Garuda = ""
+Nobara = ""
+
+# Populares entre ricers
+Arch = ""
+Artix = ""
+EndeavourOS = ""
+Manjaro = ""
+Pop = ""
+openSUSE = ""
+Solus = ""
+Alpine = ""
+FreeBSD = ""
+Redhat = ""
+RockyLinux = ""
+AlmaLinux = ""
+Kali = ""
+Fedora = ""
+Debian = ""
+Ubuntu = ""
+
+# Bônus — outras comuns
+CentOS = ""
+Elementary = ""
+SUSE = ""
+
+# Fallback (Unknown)
+Unknown = ""        # Tux genérico pra distros sem icon
+
+[username]
+show_always = true
+style_user = "bg:color1 fg:color_bg"
+style_root = "bg:color1 fg:color_bg"
+format = '[$user]($style)'
+
+[hostname]
+ssh_only = true
+style = "bg:color1 fg:color_bg"
+format = '[@$hostname ]($style)'
+
+[directory]
+style = "bg:color2 fg:text_light"
+format = "[  $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+
+[git_branch]
+symbol = ""
+style = "bg:color3 fg:text_light"
+format = '[ $symbol $branch ]($style)'
+
+[git_status]
+style = "bg:color3 fg:text_light"
+format = '[$all_status$ahead_behind ]($style)'
+
+[python]
+symbol = ""
+style = "bg:color4 fg:color_bg"
+format = '[ $symbol $version ]($style)'
+
+[nodejs]
+symbol = ""
+style = "bg:color4 fg:color_bg"
+format = '[ $symbol $version ]($style)'
+
+[rust]
+symbol = ""
+style = "bg:color4 fg:color_bg"
+format = '[ $symbol $version ]($style)'
+
+[golang]
+symbol = ""
+style = "bg:color4 fg:color_bg"
+format = '[ $symbol $version ]($style)'
+
+[c]
+symbol = ""
+style = "bg:color4 fg:color_bg"
+format = '[ $symbol $version ]($style)'
+
+[cmd_duration]
+style = "bg:color4 fg:color_bg"
+format = '[  $duration ]($style)'
+
+[character]
+success_symbol = "[ ](#a6e3a1)"
+error_symbol = "[✗ ](#f38ba8)"
+vicmd_symbol = "[ ](#f9e2af)"
+
+[shell]
+disabled = false
+format = "[ $indicator]($style)"
+style = "bg:color1 fg:color_bg"
+fish_indicator = "󰈺"
+zsh_indicator = ""
+bash_indicator = ""
+unknown_indicator = ""

@@ -1,0 +1,445 @@
+#!/usr/bin/env python3
+"""Static regression checks for high-confidence QML integration bugs."""
+
+from __future__ import annotations
+
+import re
+import unittest
+from pathlib import Path
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+QML_DIR = REPO_ROOT / ".config" / "quickshell"
+
+
+class QmlIntegrationTests(unittest.TestCase):
+    def test_qml_does_not_hardcode_repository_owner_home(self) -> None:
+        offenders = []
+        for path in sorted(QML_DIR.rglob("*.qml")):
+            if "/home/geko" in path.read_text(encoding="utf-8"):
+                offenders.append(str(path.relative_to(REPO_ROOT)))
+
+        self.assertEqual([], offenders, f"hardcoded user paths: {offenders}")
+
+    def test_dropdown_state_uses_media_route_consistently(self) -> None:
+        bar = (QML_DIR / "Bar.qml").read_text(encoding="utf-8")
+        self.assertNotIn('activeDropdown === "music"', bar)
+
+    def test_pill_is_the_default_bar_mode(self) -> None:
+        state = (QML_DIR / "UIState.qml").read_text(encoding="utf-8")
+        self.assertIn('property string barMode: "pill"', state)
+
+    def test_mango_config_waits_for_backend_confirmation(self) -> None:
+        bridge = (QML_DIR / "MangoConfig.qml").read_text(encoding="utf-8")
+        self.assertIn("signal configurationApplied(string key, var value)", bridge)
+        self.assertIn("signal configurationFailed(string key, string message)", bridge)
+        self.assertIn("function _startNextSet()", bridge)
+        self.assertIn("setProc.command = [\"python3\", _configPath, \"set-apply\"", bridge)
+        self.assertIn("configurationApplied(operation.key, operation.value)", bridge)
+        self.assertIn("configurationFailed(operation.key, message)", bridge)
+
+    def test_settings_are_moved_to_one_normal_window(self) -> None:
+        shell = (QML_DIR / "shell.qml").read_text(encoding="utf-8")
+        dashboard = (QML_DIR / "Dashboard.qml").read_text(encoding="utf-8")
+        settings = (QML_DIR / "SettingsWindow.qml").read_text(encoding="utf-8")
+
+        self.assertIn("SettingsWindow {}", shell)
+        self.assertIn("FloatingWindow", settings)
+        self.assertIn("UIState.settingsVisible", settings)
+        for tab in ("LookTab", "MangoTab", "BindsTab", "WindowRulesTab", "MonitorsTab"):
+            self.assertIn(tab + " {", settings)
+            self.assertNotIn(tab + " {", dashboard)
+        self.assertNotIn("DisplayTab {", settings)
+        self.assertIn("UIState.openSettings()", dashboard)
+
+    def test_directive_operations_are_serial_and_confirmed(self) -> None:
+        bridge = (QML_DIR / "MangoConfig.qml").read_text(encoding="utf-8")
+
+        self.assertIn("signal directiveApplied(string module, string action)", bridge)
+        self.assertIn("signal directiveFailed(string module, string action, string message)", bridge)
+        self.assertIn("function _startNextDirective()", bridge)
+        self.assertIn("directiveProc.command", bridge)
+        self.assertNotIn("property var _dirCallback", bridge)
+
+    def test_legacy_style_profiles_remain_internal_to_mango_sync(self) -> None:
+        profiles = (QML_DIR / "StyleProfiles.qml").read_text(encoding="utf-8")
+        qmldir = (QML_DIR / "qmldir").read_text(encoding="utf-8")
+        appearance = (QML_DIR / "tabs" / "LookTab.qml").read_text(encoding="utf-8")
+
+        for preset in ("rounded-elastic", "balanced", "compact-fast", "minimal"):
+            self.assertIn('id: "' + preset + '"', profiles)
+        self.assertIn("function inferAnimation", profiles)
+        self.assertIn("function inferBlur", profiles)
+        self.assertIn("function matchingPreset", profiles)
+        self.assertIn("singleton StyleProfiles 1.0 StyleProfiles.qml", qmldir)
+        self.assertNotIn("StyleProfiles.profiles", appearance)
+
+    def test_skin_changes_use_confirmed_atomic_backend_path(self) -> None:
+        bridge = (QML_DIR / "MangoConfig.qml").read_text(encoding="utf-8")
+        state = (QML_DIR / "UIState.qml").read_text(encoding="utf-8")
+        appearance = (QML_DIR / "tabs" / "LookTab.qml").read_text(encoding="utf-8")
+
+        self.assertIn('styleProc.command = ["python3", _configPath, "apply-style"', bridge)
+        self.assertIn("signal styleApplied(var pairs)", bridge)
+        self.assertIn("function adoptMangoStyle()", state)
+        self.assertIn("function setSkinProfile(profileId)", state)
+        self.assertIn("MangoConfig.applyStyle({ border_radius: Skins.mangoRadius })", state)
+        self.assertIn("MangoConfig.loadAll()", state)
+        self.assertIn("UIState.setSkinProfile(modelData.id)", appearance)
+
+    def test_global_ui_scale_uses_shared_metrics(self) -> None:
+        metrics = (QML_DIR / "Metrics.qml").read_text(encoding="utf-8")
+        state = (QML_DIR / "UIState.qml").read_text(encoding="utf-8")
+        settings = (QML_DIR / "SettingsWindow.qml").read_text(encoding="utf-8")
+        qmldir = (QML_DIR / "qmldir").read_text(encoding="utf-8")
+
+        self.assertIn("function dp(value)", metrics)
+        self.assertIn("function sp(value)", metrics)
+        self.assertIn("UIState.uiScale", metrics)
+        self.assertIn("property real uiScale: 1.15", state)
+        self.assertIn("function setUiScale", state)
+        self.assertIn("Metrics.dp(", settings)
+        self.assertIn("Metrics.sp(", settings)
+        self.assertIn("singleton Metrics 1.0 Metrics.qml", qmldir)
+
+    def test_settings_has_five_gnome_like_panels(self) -> None:
+        settings = (QML_DIR / "SettingsWindow.qml").read_text(encoding="utf-8")
+
+        for component in ("LookTab", "MonitorsTab", "MangoTab", "BindsTab", "WindowRulesTab"):
+            self.assertIn(component + " {", settings)
+        self.assertNotIn("DisplayTab {", settings)
+        self.assertIn("compactNavigation", settings)
+        self.assertIn("UIState.vimNavigationEnabled", settings)
+        self.assertIn("Keys.onPressed", settings)
+        self.assertIn('event.text === "j"', settings)
+        self.assertIn('event.text === "k"', settings)
+
+    def test_monitor_panel_uses_discovery_diagram_and_safe_preview(self) -> None:
+        monitors = (QML_DIR / "tabs" / "MonitorsTab.qml").read_text(encoding="utf-8")
+
+        self.assertIn('"probe-monitors"', monitors)
+        self.assertIn("id: arrangementCanvas", monitors)
+        self.assertIn("Drag.active", monitors)
+        self.assertIn("Parâmetros complexos", monitors)
+        self.assertIn("preview-monitors", monitors)
+        self.assertIn("confirm-monitor-preview", monitors)
+        self.assertIn("revert-monitor-preview", monitors)
+        self.assertNotIn("addMonitorFn", monitors)
+
+    def test_skins_own_geometry_and_material_tokens(self) -> None:
+        skins = (QML_DIR / "Skins.qml").read_text(encoding="utf-8")
+        state = (QML_DIR / "UIState.qml").read_text(encoding="utf-8")
+        qmldir = (QML_DIR / "qmldir").read_text(encoding="utf-8")
+
+        for profile in ("kamalen", "commonality", "aqua-2009", "skeuos-workshop"):
+            self.assertIn('"' + profile + '"', skins)
+        for token in (
+            "containerRadius", "controlRadius", "buttonRadius", "fieldRadius",
+            "sliderTrackHeight", "progressHeight", "borderWidth", "bevelWidth",
+            "textureSource", "controlTextureSource", "glossOpacity", "innerLineWidth",
+            "hardwareSize", "rowMaterial", "controlHeight", "rowHeight",
+        ):
+            self.assertIn(token, skins)
+        self.assertIn('property string skinProfile: "kamalen"', state)
+        self.assertIn('property string colorMode: "auto"', state)
+        self.assertIn('property string colorPreset: "catppuccin"', state)
+        self.assertIn("function setSkinProfile", state)
+        self.assertIn("singleton Skins 1.0 Skins.qml", qmldir)
+        self.assertNotIn("singleton Aesthetics", qmldir)
+
+    def test_shared_controls_use_material_primitives(self) -> None:
+        controls = "\n".join(
+            (QML_DIR / "components" / name).read_text(encoding="utf-8")
+            for name in ("ConfigToggle.qml", "ConfigSlider.qml", "ConfigSpinner.qml", "TileButton.qml")
+        )
+
+        self.assertIn("MaterialSurface", controls)
+        self.assertIn("MaterialTrack", controls)
+        self.assertIn("Skins.switchWidth", controls)
+
+    def test_skin_previews_render_their_own_recipe(self) -> None:
+        preview = (QML_DIR / "components" / "SkinPreview.qml").read_text(encoding="utf-8")
+        surface = (QML_DIR / "components" / "MaterialSurface.qml").read_text(encoding="utf-8")
+        track = (QML_DIR / "components" / "MaterialTrack.qml").read_text(encoding="utf-8")
+
+        self.assertIn("skinId: root.profileId", preview)
+        self.assertIn('property string skinId: ""', surface)
+        self.assertIn("Skins.recipe(resolvedSkinId)", surface)
+        self.assertIn("Skins.materialTop(root.resolvedMaterialRole, root.pressed, root.active, root.resolvedSkinId)", surface)
+        self.assertIn('property string skinId: ""', track)
+        self.assertNotIn("Skins.currentId === root.profileId", preview)
+
+    def test_rich_skin_materials_are_role_aware_and_palette_driven(self) -> None:
+        skins = (QML_DIR / "Skins.qml").read_text(encoding="utf-8")
+        surface = (QML_DIR / "components" / "MaterialSurface.qml").read_text(encoding="utf-8")
+        materials = QML_DIR / "assets" / "materials"
+
+        for asset in ("aqua-brushed.svg", "skeuos-wood.svg", "skeuos-fiber.svg"):
+            self.assertTrue((materials / asset).is_file(), asset)
+        self.assertIn("function textureForRole", skins)
+        self.assertIn("function textureOpacityForRole", skins)
+        self.assertIn("Skins.textureForRole(root.resolvedSkinId, root.resolvedMaterialRole)", surface)
+        self.assertIn("root.skinRecipe.glossOpacity", surface)
+        self.assertIn("root.skinRecipe.innerLineWidth", surface)
+        self.assertIn("root.skinRecipe.hardwareSize", surface)
+        self.assertNotRegex(skins, r"#[0-9a-fA-F]{6}")
+
+    def test_skin_color_suggestions_are_optional_and_adaptive(self) -> None:
+        skins = (QML_DIR / "Skins.qml").read_text(encoding="utf-8")
+        appearance = (QML_DIR / "tabs" / "LookTab.qml").read_text(encoding="utf-8")
+
+        self.assertIn('recommendedMode: "adaptive-preset", recommendedPreset: "nord"', skins)
+        self.assertIn('recommendedMode: "adaptive-preset", recommendedPreset: "gruvbox"', skins)
+        self.assertIn("Skins.profile(UIState.skinProfile)", appearance)
+        self.assertIn("recommendedMode", appearance)
+        self.assertIn("recommendedPreset", appearance)
+
+    def test_skeuos_uses_semantic_materials_instead_of_generic_studs(self) -> None:
+        skins = (QML_DIR / "Skins.qml").read_text(encoding="utf-8")
+        surface = (QML_DIR / "components" / "MaterialSurface.qml").read_text(encoding="utf-8")
+        button = (QML_DIR / "components" / "MaterialButton.qml").read_text(encoding="utf-8")
+        settings = (QML_DIR / "SettingsWindow.qml").read_text(encoding="utf-8")
+        materials = QML_DIR / "assets" / "materials"
+
+        self.assertTrue((materials / "skeuos-metal.svg").is_file())
+        self.assertIn("function materialRole", skins)
+        self.assertIn("function glossOpacityForRole", skins)
+        self.assertIn('property string materialVariant: ""', surface)
+        self.assertIn("root.resolvedMaterialRole === \"wood\"", surface)
+        self.assertIn('property string materialVariant: ""', button)
+        self.assertIn("materialVariant: root.materialVariant", button)
+        for material in ("wood", "paper", "metal"):
+            self.assertIn('materialVariant: "' + material + '"', settings)
+
+    def test_appearance_exposes_skin_color_motion_and_interface(self) -> None:
+        appearance = (QML_DIR / "tabs" / "LookTab.qml").read_text(encoding="utf-8")
+
+        self.assertIn("Skins.profiles", appearance)
+        self.assertIn("UIState.setSkinProfile(modelData.id)", appearance)
+        for title in ("Skin", "Cores", "Movimento", "Interface"):
+            self.assertIn('title: "' + title + '"', appearance)
+        self.assertNotIn("Aesthetics.profiles", appearance)
+
+    def test_material_engine_does_not_implement_titlebars_or_docks(self) -> None:
+        material = (QML_DIR / "components" / "MaterialSurface.qml").read_text(encoding="utf-8").lower()
+        skins = (QML_DIR / "Skins.qml").read_text(encoding="utf-8").lower()
+        self.assertNotIn("titlebar", material + skins)
+        self.assertNotIn("dock", material + skins)
+
+    def test_clipboard_row_children_do_not_use_horizontal_anchors(self) -> None:
+        clipboard = (QML_DIR / "ClipboardMenu.qml").read_text(encoding="utf-8")
+        image_row = re.search(
+            r"// ── Image Row ──(?P<body>.*?)Rectangle \{\n\s+anchors\.fill",
+            clipboard,
+            flags=re.DOTALL,
+        )
+
+        self.assertIsNotNone(image_row, "clipboard image row was not found")
+        body = image_row.group("body")
+        self.assertNotIn("left: parent.left", body)
+
+    def test_popups_use_current_anchor_api(self) -> None:
+        for name in ("TrayPopup.qml", "BluetoothPopup.qml"):
+            popup = (QML_DIR / name).read_text(encoding="utf-8")
+            with self.subTest(name=name):
+                self.assertNotRegex(popup, r"^\s*parentWindow:", msg=name)
+                self.assertNotRegex(popup, r"^\s*relative[XY]:", msg=name)
+                self.assertIn("anchor.window:", popup)
+
+    def test_local_wallpaper_carousel_has_bounded_delegates(self) -> None:
+        wallpaper = (QML_DIR / "Wallpaper.qml").read_text(encoding="utf-8")
+        carousel = re.search(
+            r"id: sceneRoot(?P<body>.*?)\n\s*MouseArea \{\n\s*anchors\.fill: parent",
+            wallpaper,
+            flags=re.DOTALL,
+        )
+
+        self.assertIsNotNone(carousel, "local wallpaper carousel was not found")
+        body = carousel.group("body")
+        self.assertNotIn("model: filtered", body)
+        self.assertIn("model: 7", body)
+        self.assertIn("property int wallIndex", body)
+
+    def test_wallhaven_flow_requires_preview_before_download(self) -> None:
+        wallpaper = (QML_DIR / "Wallpaper.qml").read_text(encoding="utf-8")
+
+        self.assertIn("id: onlineToolbar", wallpaper)
+        self.assertIn("id: onlinePreview", wallpaper)
+        self.assertIn("function selectOnlineItem(index)", wallpaper)
+        self.assertIn("function startOnlineDownload(item)", wallpaper)
+        self.assertIn("onClicked: selectOnlineItem(index)", wallpaper)
+
+    def test_wallhaven_has_distinct_error_and_download_feedback(self) -> None:
+        wallpaper = (QML_DIR / "Wallpaper.qml").read_text(encoding="utf-8")
+
+        self.assertIn('property string onlineSearchError: ""', wallpaper)
+        self.assertIn('property string downloadState: "idle"', wallpaper)
+        self.assertIn("id: downloadStatus", wallpaper)
+        self.assertIn("if (currentPage === 1) onlineModel.clear()", wallpaper)
+
+    def test_wallhaven_exposes_random_discovery(self) -> None:
+        wallpaper = (QML_DIR / "Wallpaper.qml").read_text(encoding="utf-8")
+
+        self.assertIn("function showRandomWallpapers()", wallpaper)
+        self.assertIn("id: randomButton", wallpaper)
+        self.assertIn("onClicked: showRandomWallpapers()", wallpaper)
+        self.assertIn("runOnlineSearch(\"\", 1, true)", wallpaper)
+
+    def test_wallhaven_backend_returns_search_errors_as_json(self) -> None:
+        helper = (QML_DIR / "wallhaven" / "wallhaven.py").read_text(encoding="utf-8")
+
+        self.assertIn('print(json.dumps({"error": str(e)}))', helper)
+
+    def test_live_wallpaper_tab_has_secure_explicit_flow(self) -> None:
+        wallpaper = (QML_DIR / "Wallpaper.qml").read_text(encoding="utf-8")
+        live_tab = (QML_DIR / "LiveWallpaperTab.qml").read_text(encoding="utf-8")
+        state = (QML_DIR / "UIState.qml").read_text(encoding="utf-8")
+        qmldir = (QML_DIR / "qmldir").read_text(encoding="utf-8")
+        live_sources = wallpaper + live_tab
+
+        self.assertIn('property string livewallpaperScript:', wallpaper)
+        self.assertIn('{ name: "live", label:', wallpaper)
+        self.assertIn("id: liveRoot", wallpaper)
+        self.assertIn("id: livePreviewLoader", live_sources)
+        self.assertIn("function startLiveDownload(item)", live_sources)
+        self.assertIn("LiveWallpaperTab 1.0 LiveWallpaperTab.qml", qmldir)
+        self.assertNotIn("pexelsApiKey", state)
+
+    def test_live_wallpaper_uses_desktophut_catalog_flow(self) -> None:
+        live_tab = (QML_DIR / "LiveWallpaperTab.qml").read_text(encoding="utf-8")
+        l10n = (QML_DIR / "L10n.qml").read_text(encoding="utf-8")
+        helper = (QML_DIR / "livewallpaper" / "livewallpaper.py").read_text(encoding="utf-8")
+        sources = live_tab + l10n + helper
+
+        self.assertIn('runLiveListing("featured", "", 1)', live_tab)
+        self.assertIn("nextPage", live_tab)
+        self.assertIn("hasMore", live_tab)
+        self.assertIn("item.license", live_tab)
+        self.assertIn("item.license_url", live_tab)
+        self.assertIn("item.attribution", live_tab)
+        self.assertIn("DesktopHut", sources)
+        self.assertIn("Destaques", l10n)
+        self.assertIn("live_no_results", live_tab)
+        self.assertIn("Nenhum vídeo correspondente", l10n)
+        for obsolete in ("Pexels", "pexels", "Wikimedia Commons", "commons-", "PEXELS_API_KEY", 'command: ["python3", root.scriptPath, "status"]'):
+            self.assertNotIn(obsolete, sources)
+
+    def test_video_wallpaper_playback_is_optimized_and_lock_aware(self) -> None:
+        wallpaper = (QML_DIR / "Wallpaper.qml").read_text(encoding="utf-8")
+        shell = (QML_DIR / "shell.qml").read_text(encoding="utf-8")
+
+        for source in (wallpaper, shell):
+            self.assertIn("hwdec=auto-safe", source)
+            self.assertIn("loop-file=inf", source)
+        self.assertIn('locked ? "-STOP" : "-CONT"', shell)
+
+    def test_shell_uses_one_supervised_ipc_bridge(self) -> None:
+        shell = (QML_DIR / "shell.qml").read_text(encoding="utf-8")
+        runtime = (QML_DIR / "Runtime.qml").read_text(encoding="utf-8")
+        qmldir = (QML_DIR / "qmldir").read_text(encoding="utf-8")
+
+        self.assertIn("id: ipcBridge", shell)
+        self.assertIn("ipc_bridge.py", shell)
+        self.assertIn("Runtime.supervise", shell)
+        for obsolete in (
+            "launcherToggleWatch", "lockRequestWatch", "powerMenuWatch",
+            "layoutMenuWatch", "clipboardMenuWatch", "wallpaperToggleWatch",
+            "mediaToggleWatch",
+        ):
+            self.assertNotIn(obsolete, shell)
+        for route in ("dashboard", "settings", "shortcuts"):
+            self.assertIn('case "' + route + '"', shell)
+        self.assertIn("function supervise(command)", runtime)
+        self.assertIn("process_supervisor.py", runtime)
+        self.assertIn("singleton Runtime 1.0 Runtime.qml", qmldir)
+
+    def test_transient_layers_are_mutually_exclusive(self) -> None:
+        state = (QML_DIR / "UIState.qml").read_text(encoding="utf-8")
+
+        self.assertIn("property bool shortcutHelpVisible", state)
+        self.assertIn("function closeTransientSurfaces()", state)
+        self.assertIn("function showShortcutHelp()", state)
+        for function_name in (
+            "toggleDropdown", "togglePowerMenu", "toggleLayoutMenu",
+            "toggleClipboardMenu", "openSettings",
+        ):
+            body = re.search(
+                rf"function {function_name}\([^)]*\)\s*\{{(?P<body>.*?)\n\s*\}}",
+                state,
+                flags=re.DOTALL,
+            )
+            self.assertIsNotNone(body, function_name)
+            self.assertIn("closeTransientSurfaces", body.group("body"), function_name)
+
+    def test_dashboard_has_fullscreen_dismiss_layer_and_keyboard_routes(self) -> None:
+        dashboard = (QML_DIR / "Dashboard.qml").read_text(encoding="utf-8")
+
+        self.assertIn("anchors { top: true; right: true; bottom: true; left: true }", dashboard)
+        self.assertIn("WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive", dashboard)
+        self.assertIn("id: outsideDismissArea", dashboard)
+        self.assertIn("onClicked: UIState.closeDropdowns()", dashboard)
+        self.assertIn("Keys.onPressed", dashboard)
+        for key in ("Qt.Key_Escape", "Qt.Key_1", "Qt.Key_3", "Qt.Key_Question"):
+            self.assertIn(key, dashboard)
+
+    def test_calendar_uses_a_fullscreen_dismiss_layer(self) -> None:
+        calendar = (QML_DIR / "Calendar.qml").read_text(encoding="utf-8")
+
+        self.assertIn("anchors { top: true; right: true; bottom: true; left: true }", calendar)
+        self.assertIn("onClicked: UIState.closeDropdowns()", calendar)
+        self.assertIn('role: "background"', calendar)
+        self.assertIn("outlineColor: a(Colors.fg, 0.1)", calendar)
+
+    def test_shared_controls_are_keyboard_and_accessibility_ready(self) -> None:
+        button = (QML_DIR / "components" / "MaterialButton.qml").read_text(encoding="utf-8")
+        toggle = (QML_DIR / "components" / "ConfigToggle.qml").read_text(encoding="utf-8")
+        slider = (QML_DIR / "components" / "ConfigSlider.qml").read_text(encoding="utf-8")
+        settings = (QML_DIR / "SettingsWindow.qml").read_text(encoding="utf-8")
+
+        self.assertIn("FocusScope", button)
+        self.assertIn("activeFocusOnTab: true", button)
+        self.assertIn("Accessible.role: Accessible.Button", button)
+        self.assertIn("Qt.Key_Return", button)
+        self.assertIn("Qt.Key_Space", toggle)
+        for key in ("Qt.Key_Left", "Qt.Key_Right", "Qt.Key_Home", "Qt.Key_End"):
+            self.assertIn(key, slider)
+        self.assertIn("Qt.Key_Escape", settings)
+        self.assertIn("Qt.ControlModifier", settings)
+        self.assertIn("Qt.Key_1", settings)
+
+    def test_bar_outline_tracks_the_dynamic_window_accent(self) -> None:
+        bar = (QML_DIR / "Bar.qml").read_text(encoding="utf-8")
+        surface = (QML_DIR / "components" / "MaterialSurface.qml").read_text(encoding="utf-8")
+
+        self.assertGreaterEqual(bar.count("outlineColor: Colors.accent"), 4)
+        self.assertGreaterEqual(bar.count("outlineWidth:"), 4)
+        self.assertIn("property real outlineWidth", surface)
+        self.assertIn("property color outlineColor", surface)
+
+    def test_global_shell_shortcuts_are_declared(self) -> None:
+        binds = (REPO_ROOT / ".config" / "mango" / "conf.d" / "binds.conf").read_text(encoding="utf-8")
+
+        for binding in (
+            "bind=SUPER,a,spawn,touch /tmp/qs-dashboard-toggle",
+            "bind=SUPER,comma,spawn,touch /tmp/qs-settings-toggle",
+            "bind=SUPER+SHIFT,m,spawn,touch /tmp/qs-media-toggle",
+            "bind=SUPER+SHIFT,slash,spawn,touch /tmp/qs-shortcuts-toggle",
+        ):
+            self.assertIn(binding, binds)
+
+    def test_active_shell_surfaces_use_skin_geometry(self) -> None:
+        active_surfaces = (
+            "Dashboard.qml", "SettingsWindow.qml", "Wallpaper.qml", "Music.qml",
+            "Calendar.qml", "Lockscreen.qml", "tabs/QuickTab.qml",
+        )
+        offenders = []
+        for name in active_surfaces:
+            source = (QML_DIR / name).read_text(encoding="utf-8")
+            if "UIState.borderRadius" in source or "cycleBorderRadius" in source:
+                offenders.append(name)
+
+        self.assertEqual([], offenders, f"legacy geometry users: {offenders}")
+
+
+if __name__ == "__main__":
+    unittest.main()
