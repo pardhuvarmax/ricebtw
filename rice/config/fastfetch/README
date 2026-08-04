@@ -1,6 +1,0 @@
-Fastfetch system-info config. ascii/ is a collection of custom ASCII art used
-by the ff() shell function (see aliases.nix in the main repo) for `ff -n` --
-that's most of this folder's 17M.
-
-NSFW warning: ascii/ contains some NSFW art. This repo is public -- be aware
-before browsing it or linking this repo anywhere.

@@ -10,3 +10,6 @@ secrets/secrets.nix
 # Defense-in-depth: rice/ is a plain backup copy of live dotfiles, scanned for
 # secrets before each copy, but any .env that slips in should never be tracked.
 rice/**/.env
+
+# Exceeds GitHub's 100MB hard file size limit; stays local-only.
+rice/config/mangoconfigs/wallpapers/desktophut-12f13dabdd67d95a-3840x2160.mp4
