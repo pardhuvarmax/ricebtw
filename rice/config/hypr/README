@@ -7,5 +7,6 @@ the biggest and most load-bearing folder in this whole backup.
 NO LONGER ACTIVELY USED as of the MangoWC migration (2026-08-05) -- the
 compositor is mango now, not Hyprland. Kept here as-is, not being re-synced
 from a live source anymore. See ../mangoconfigs/ for the current setup.
-Possible this gets fully removed down the line if nothing ends up depending
-on it.
+Possible this gets removed from the local working tree down the line if
+nothing ends up depending on it -- that only affects future checkouts, not
+git history; already-pushed commits stay on GitHub permanently either way.

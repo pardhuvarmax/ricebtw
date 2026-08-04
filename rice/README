@@ -10,9 +10,12 @@ migrated from kamalen-shell to a MangoWC port of caelestia-shell
 Hyprland-specific is NO LONGER ACTIVELY USED -- kept as-is for now (not being
 re-synced from a live source, since there isn't one) rather than deleted,
 purely as a historical reference in case anything needs to be recovered from
-it. May be removed entirely in the future if it's confirmed nothing still
-depends on it. Same goes for kamalen-shell: see config/mangoconfigs/README
-for the current active setup (mango + caelestia) vs. what's legacy.
+it. May be removed from the local working tree in the future if it's
+confirmed nothing still depends on it -- that would only drop it from
+future checkouts, not from git history; anything already pushed stays in
+this repo's history on GitHub permanently regardless, recoverable any time.
+Same goes for kamalen-shell: see config/mangoconfigs/README for the current
+active setup (mango + caelestia) vs. what's legacy.
 
 Deliberately left out of Phase 7/8 of the Nix migration (see the main
 README) -- this is the live matugen-driven theming + Hyprland/quickshell
