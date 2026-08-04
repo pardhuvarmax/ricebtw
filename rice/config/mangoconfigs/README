@@ -1,0 +1,22 @@
+Everything related to the current mango/caelestia setup, grouped together
+since ../hypr and the rest of ../ are Hyprland-era and no longer active.
+
+mangowc/       ACTIVE. mango's own compositor config (conf.d/*.conf,
+               config.conf). Was symlinked into kamalen-shell before that
+               got dropped; now a standalone copy in its own right.
+
+caelestia/     ACTIVE. The caelestia-shell-mango source (a MangoWC port of
+               caelestia-shell, github.com/evoziosk/caelestia-shell-mango)
+               plus shell.json (wallpaperDir pointed at ~/wallpapers). This
+               is what actually renders the bar/dashboard/launcher/etc now.
+               docs/fixes.rst in here documents local fixes on top of that
+               fork that haven't (yet, or ever) made it upstream.
+
+wallpapers/    ACTIVE. The ~/wallpapers pool caelestia's shell.json points
+               at. One file over GitHub's 100MB limit is gitignored and
+               stays local-only, see the repo .gitignore.
+
+kamalenshell/  LEGACY, NOT ACTIVELY USED. Last live snapshot of kamalen-shell
+               before it was replaced by caelestia-shell-mango. Kept for
+               reference/rollback, not being re-synced from a live source
+               (there isn't one anymore -- kamalen-shell itself was removed).

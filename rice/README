@@ -4,6 +4,16 @@ version-controlled backup. Editing a file in here does nothing to your actual
 running config; edit the real file under ~/.config or ~ instead, then re-copy
 here if you want the backup updated.
 
+STATUS (2026-08-05): compositor migrated from Hyprland to MangoWC, and shell
+migrated from kamalen-shell to a MangoWC port of caelestia-shell
+(evoziosk/caelestia-shell-mango). config/hypr/ and everything below that's
+Hyprland-specific is NO LONGER ACTIVELY USED -- kept as-is for now (not being
+re-synced from a live source, since there isn't one) rather than deleted,
+purely as a historical reference in case anything needs to be recovered from
+it. May be removed entirely in the future if it's confirmed nothing still
+depends on it. Same goes for kamalen-shell: see config/mangoconfigs/README
+for the current active setup (mango + caelestia) vs. what's legacy.
+
 Deliberately left out of Phase 7/8 of the Nix migration (see the main
 README) -- this is the live matugen-driven theming + Hyprland/quickshell
 setup, and Home Manager taking it over declaratively would fight matugen and

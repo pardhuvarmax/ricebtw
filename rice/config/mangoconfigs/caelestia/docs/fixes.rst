@@ -132,3 +132,76 @@ Rebuilt (``cmake --build build``), reinstalled
 (``sudo cmake --install build``), restarted ``qs -c caelestia``, then ran
 ``caelestia shell drawers toggle launcher`` repeatedly -- no crash, no
 ``TypeError`` in the log, process stayed alive throughout.
+
+**Status**: submitted upstream as evoziosk/caelestia-shell-mango#3.
+
+``caelestia wallpaper -r`` crashes on MangoWC (not a shell bug -- caelestia-cli itself)
+----------------------------------------------------------------------------------------
+
+**Symptom**
+
+``caelestia wallpaper -r <dir>`` (bound to ``Super+Shift+W``) threw a Python
+traceback instead of switching the wallpaper:
+
+.. code-block:: text
+
+   File ".../caelestia/utils/hypr.py", line 15, in message
+       sock.connect(socket_path)
+   FileNotFoundError: [Errno 2] No such file or directory
+
+**Cause**
+
+This isn't the QML shell at all -- ``caelestia-cli`` (a separate upstream
+project, installed here from the AUR ``caelestia-cli`` package) was never
+ported for MangoWC. ``utils/hypr.py`` hardcodes a socket path built from
+``$HYPRLAND_INSTANCE_SIGNATURE``, which doesn't exist outside Hyprland.
+``get_wallpapers()`` only hits that path when filtering candidate wallpapers
+by monitor resolution:
+
+.. code-block:: python
+
+   def get_wallpapers(args: Namespace) -> list[Path]:
+       ...
+       if args.no_filter:
+           return walls
+       monitors = cast(list[dict[str, int]], message("monitors"))  # Hyprland IPC
+       ...
+
+**Fix**
+
+No code patch (this lives in a different upstream repo, caelestia-dots/cli,
+not evoziosk/caelestia-shell-mango) -- worked around locally by adding
+``-n``/``--no-filter`` to the keybind, which skips the Hyprland IPC call
+entirely:
+
+.. code-block:: text
+
+   bind=SUPER+SHIFT,w,spawn,caelestia wallpaper -r ~/wallpapers -n
+
+Trade-off: wallpapers are no longer filtered by monitor resolution before
+being picked. Not currently considered worth patching caelestia-cli itself
+for.
+
+mango keybind edits need a full compositor restart, not just ``reload_config``
+--------------------------------------------------------------------------------
+
+After editing ``binds.conf``, running ``mmsg dispatch reload_config`` (or the
+``SUPER+CTRL,R`` bind for the same thing) was **not sufficient** for the
+caelestia-routed binds to actually fire on keypress -- even though:
+
+- the underlying command worked when run directly (``caelestia shell drawers
+  toggle launcher``)
+- the exact same spawn worked when triggered manually via
+  ``mmsg dispatch "spawn,caelestia shell drawers toggle launcher"``
+  (mango's own dispatch mechanism, bypassing the keyboard)
+- ``mango -p`` validated the config with no errors
+- other, unrelated binds (e.g. ``Super+Return`` -> kitty, ``Super+E`` ->
+  thunar) worked fine the whole time, ruling out a global input-capture
+  problem
+
+A full mango restart (relogin) resolved it. Root cause not fully pinned down
+-- ``reload_config`` may only cover a subset of runtime-tunable settings
+(gaps/colors/etc) rather than re-parsing keybind dispatch tables. Worth
+knowing before spending time debugging "the command works everywhere except
+the actual keypress" -- try a full restart before assuming it's a config or
+IPC problem.

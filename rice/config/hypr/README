@@ -1,5 +1,11 @@
-Hyprland compositor config -- the actual daily-driver rice. Includes
+Hyprland compositor config -- was the daily-driver rice. Includes
 scripts/quickshell/Shell.qml (the real, live quickshell shell -- see
 scripts/quickshell/), the wallpaper picker, calendar (with the excluded
-OpenWeather key, see .env.example), and matugen-generated colors.conf. This
-is the biggest and most load-bearing folder in this whole backup.
+OpenWeather key, see .env.example), and matugen-generated colors.conf. Was
+the biggest and most load-bearing folder in this whole backup.
+
+NO LONGER ACTIVELY USED as of the MangoWC migration (2026-08-05) -- the
+compositor is mango now, not Hyprland. Kept here as-is, not being re-synced
+from a live source anymore. See ../mangoconfigs/ for the current setup.
+Possible this gets fully removed down the line if nothing ends up depending
+on it.
