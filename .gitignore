@@ -12,4 +12,4 @@ secrets/secrets.nix
 rice/**/.env
 
 # Exceeds GitHub's 100MB hard file size limit; stays local-only.
-rice/config/mangoconfigs/wallpapers/desktophut-12f13dabdd67d95a-3840x2160.mp4
+rice/arch-linux/config/mangoconfigs/wallpapers/desktophut-12f13dabdd67d95a-3840x2160.mp4

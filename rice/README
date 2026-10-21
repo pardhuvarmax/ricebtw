@@ -27,7 +27,9 @@ README) -- this is the live matugen-driven theming + Hyprland/quickshell
 setup, and Home Manager taking it over declaratively would fight matugen and
 the compositor for control of files they actively regenerate.
 
-config/   copies of ~/.config/{hypr,waybar,kitty,rofi,swaync,wlogout,foot,
+config/   (now at arch-linux/config/ -- moved there 2026-10-21 so Arch and Void
+          each have their own folder)
+          copies of ~/.config/{hypr,waybar,kitty,rofi,swaync,wlogout,foot,
           matugen,fastfetch,qt5ct,qt6ct,cava,fish,gtk-3.0,illogical-impulse,
           spicetify,fuzzel,kde-material-you-colors,Kvantum}, plus:
           config/nvim (just init.lua, lazy-lock.json, matugen_colors.lua --
