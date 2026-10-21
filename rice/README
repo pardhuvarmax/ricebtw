@@ -4,6 +4,11 @@ version-controlled backup. Editing a file in here does nothing to your actual
 running config; edit the real file under ~/.config or ~ instead, then re-copy
 here if you want the backup updated.
 
+VOID LINUX: rice/void-linux/ is a separate, self-contained backup of the
+experimental Void install (runit/xbps, MangoWC + DankMaterialShell). Nothing
+else in this file describes it -- read rice/void-linux/README.md. Everything
+below this paragraph is the Arch daily driver.
+
 STATUS (2026-08-05): compositor migrated from Hyprland to MangoWC, and shell
 migrated from kamalen-shell to a MangoWC port of caelestia-shell
 (evoziosk/caelestia-shell-mango). config/hypr/ and everything below that's

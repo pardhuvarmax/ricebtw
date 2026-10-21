@@ -1,5 +1,7 @@
-archbtw
+ricebtw
 =======
+
+(formerly archbtw -- renamed 2026-10-21, GitHub redirects the old name)
 
 I use Arch, btw. 
 also apparently Nix now, don't tell pacman. 
@@ -9,12 +11,27 @@ NixOS? Never heard of her.
 
 =======
 
+Machines
+--------
+
+Arch Linux    daily driver. Everything below (Home Manager, Nix, the Phase
+              list, GPU notes, pacman rules) is about this install, and
+              rice/ (outside void-linux/) is its desktop backup:
+              MangoWC + caelestia-shell-mango. Hyprland is no longer used
+              (replaced by MangoWC in Aug 2026); its configs are kept as
+              legacy reference only.
+Void Linux    experimenting. runit + xbps, no systemd, no Nix, no Home
+              Manager. MangoWC + DankMaterialShell. Everything for it lives in
+              rice/void-linux/ and is self-contained -- see the README there.
+              Nothing in the Nix/pacman sections applies to Void.
+
 Home Manager configuration for sicmundus, layered on top of a normal Arch
 Linux install. This is NOT NixOS. Arch (pacman) still owns the kernel,
 bootloader, firmware, drivers, systemd, networking, filesystems, DBus, and
 PipeWire. Nix + Home Manager owns the user environment on top of it: CLI
-tools, dev toolchains, shell config, dotfiles, and (eventually) the Hyprland
-desktop stack.
+tools, dev toolchains, shell config, dotfiles, and (eventually) the desktop
+stack. (Hyprland was the original target; it has since been replaced by MangoWC,
+which is not Nix-managed -- see rice/README.)
 
 Layout
 ------
@@ -48,8 +65,13 @@ secrets/secrets.nix   agenix recipient manifest, gitignored (has a real
                        ~/.ssh/id_ed25519.pub if this repo is ever cloned fresh
 backup/               the original stock `home-manager init` output, kept
                        for reference, not imported by anything
-rice/                 plain backup COPY of the live Hyprland/matugen desktop
-                       dotfiles (hypr, waybar, kitty, rofi, swaync, etc), plus
+rice/void-linux/      plain backup COPY of the Void Linux (experimental) setup:
+                       MangoWC + DankMaterialShell dotfiles, bashrc/aliases,
+                       xbps package lists, the DMS repo files. Separate from the
+                       Arch rice around it, see rice/void-linux/README.md
+rice/                 plain backup COPY of the Arch desktop dotfiles
+                       (MangoWC now; hypr/ is legacy from the Hyprland days;
+                       also kitty, rofi, swaync, etc), plus
                        the full ~/Pictures/Wallpapers pool -- not managed or
                        symlinked by Home Manager, see rice/README. The
                        Wallpapers folder (~3.7G) is fully committed and pushed
@@ -72,7 +94,8 @@ Skipped: Phase 7 (fonts/themes/icons/cursor) -- investigated, deliberately
          Nerd Font, in kitty) is hard-blocked from pacman removal by yazi
          anyway. Nothing here would gain from a Nix package -- it's already
          better managed outside of pacman and Nix both.
-Skipped: Phase 8 (Hyprland/Waybar/Hyprlock/Hypridle/Hyprpaper/Rofi/
+Skipped: Phase 8 [historical -- written while Hyprland was the compositor;
+         it has since been replaced by MangoWC] (Hyprland/Waybar/Hyprlock/Hypridle/Hyprpaper/Rofi/
          notifications/clipboard/portal) -- investigated, deliberately not
          migrating. hyprland (the live compositor, required by hyprshade),
          hyprlock (security-critical -- a broken lock screen can fail open,

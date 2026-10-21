@@ -1,16 +1,43 @@
-# Void Linux rice (MangoWC + DankMaterialShell)
+# Void Linux rice (experimental)
 
-Saved 2026-10-21 from the Void install.
+The experimental machine. Arch is the daily driver; this is where new ideas get tried first.
+Saved 2026-10-21 from the live Void install. Nothing here is managed by Home Manager or Nix.
 
-- `wm/`            the wm repo (mango config, fontconfig, rofi, etc.). Mango config: wm/config/mango/config.conf
-- `home/`          ~/.bashrc, ~/.aliases (xbps/runit versions), ~/.face
-- `config/`        ~/.config copies: dms, fastfetch, kitty, nvim, fuzzel, swayosd, flameshot, spotify, variety, codium-insiders (settings + extensions.txt)
-- `bin/`           ~/.local/bin wrappers for the Flatpaks (zen-browser, spotify, code-insiders)
-- `etc-xbps.d/`    DMS repository files for /etc/xbps.d
-- `packages/`      xbps-manual.txt (manually installed packages), flatpak.txt
+**Stack:** Void Linux, runit + xbps (no systemd), MangoWC, DankMaterialShell (DMS), kitty, Maple Mono NF.
 
-Notes
-- Shell: DMS (`dms run` in mango autostart). mangobar, mako, variety, wm theme engine and wallpaper-manager are disabled.
-- wm/config/themes/theme-engine.py no longer calls update_fastfetch().
-- Wallpapers live in ../../../Pictures/wallpapers (not duplicated here).
-- Mango keys: caelestia binds were mapped to `dms ipc call ...`.
+## Layout
+
+| Folder | What it is |
+|---|---|
+| `wm/` | the `wm` repo copy: Mango config (`wm/config/mango/config.conf`), fontconfig, rofi, install script |
+| `home/` | `~/.bashrc`, `~/.aliases` (xbps/runit versions of the Arch aliases) |
+| `config/` | `~/.config` copies: dms, fastfetch, kitty, nvim, fuzzel, swayosd, flameshot, spotify, variety, codium-insiders |
+| `bin/` | `~/.local/bin` wrappers for the Flatpaks (`zen-browser`, `spotify`, `code-insiders`) |
+| `etc-xbps.d/` | DMS repository files for `/etc/xbps.d` |
+| `packages/` | `xbps-manual.txt` (manually installed), `flatpak.txt` |
+
+`~/.face` (profile picture) is deliberately not committed -- the repo is public.
+
+## Differences from the Arch setup
+
+- **Shell:** DMS (`dms run`) instead of caelestia-shell-mango. The old caelestia keybinds are mapped to `dms ipc call ...`.
+- **Packages:** xbps instead of pacman/paru; Zen, Spotify and VSCodium Insiders come from Flatpak.
+- **Services:** runit (`sv`, `/var/service`) instead of systemd. The service aliases are converted.
+- **Disabled on Void:** mangobar, mako, variety, `wallpaper-manager` autostart and the wm theme engine. DMS owns bar, notifications, wallpaper and colours.
+- `wm/config/themes/theme-engine.py` no longer calls `update_fastfetch()`; it used to overwrite the fastfetch config on every theme apply.
+- Every new terminal runs `fastfetch` (end of `home/.bashrc`).
+
+## Restore on a fresh Void install
+
+1. Copy `etc-xbps.d/*` to `/etc/xbps.d/`, then `sudo xbps-install -Su` and `sudo xbps-install -S dms matugen cava qt6-multimedia`. Check the repo signing-key fingerprint against the official docs before accepting it.
+2. Install what is in `packages/xbps-manual.txt` that you want.
+3. `flatpak install --user flathub` the IDs in `packages/flatpak.txt`.
+4. Copy `home/` into `~`, `config/*` into `~/.config`, and `bin/*` into `~/.local/bin`.
+5. Link or copy `wm/config/*` per `wm/install.sh`; the Mango config is `wm/config/mango/config.conf`.
+6. Wallpapers are not in this repo (about 4.8 GB). Put them in `~/Pictures/wallpapers`.
+
+## Known loose ends
+
+- VSCodium extensions are not installed; the list is in `config/codium-insiders/extensions.txt`.
+- The flameshot save path still points at a folder from the Arch machine.
+- The Zen browser profile is not migrated.
