@@ -69,7 +69,7 @@ rice/void-linux/      plain backup COPY of the Void Linux (experimental) setup:
                        MangoWC + DankMaterialShell dotfiles, bashrc/aliases,
                        xbps package lists, the DMS repo files. Separate from the
                        Arch rice around it, see rice/void-linux/README.md
-rice/arch-linux/       Arch desktop dotfiles live in rice/arch-linux/config
+rice/arch-linux/       Arch desktop dotfiles live in config/, home/, boot/ here
 rice/                 plain backup COPY of the Arch desktop dotfiles
                        (MangoWC now; hypr/ is legacy from the Hyprland days;
                        also kitty, rofi, swaync, etc), plus
@@ -231,7 +231,7 @@ Rollback
 Removing a pacman package is only ever done after the Nix replacement is
 installed, built, switched to, and functionally verified -- never before.
 
-Sparse-checkout (rice/home/Pictures/Wallpapers)
+Sparse-checkout (rice/arch-linux/home/Pictures/Wallpapers)
 ------------------------------------------------
 
 This repo's git history and GitHub remote have the full wallpaper pool
@@ -240,7 +240,7 @@ materialize it -- `git sparse-checkout` (non-cone mode) excludes just that
 one path via .git/info/sparse-checkout:
 
   /*
-  !/rice/home/Pictures/Wallpapers/
+  !/rice/arch-linux/home/Pictures/Wallpapers/
 
 This avoids a duplicate on-disk copy (the real one lives at
 ~/Pictures/Wallpapers, untouched by any of this). The files are still fully

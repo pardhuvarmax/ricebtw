@@ -57,8 +57,8 @@ The actual live quickshell config is config/hypr/scripts/quickshell/Shell.qml
 ~/.config/quickshell directory (which had an "ii"/illogical-impulse module,
 plus hypr-overview/whisker/hypr-lens/music) is NOT used -- confirmed inactive
 and deliberately left out of this backup.
-home/     copies of ~/.p10k.zsh, ~/.gtkrc-2.0, ~/.aliases
-boot/     Plymouth + GRUB theme sources, copied from ~/Downloads/archplys
+home/     (now at arch-linux/home/) copies of ~/.p10k.zsh, ~/.gtkrc-2.0, ~/.aliases
+boot/     (now at arch-linux/boot/) Plymouth + GRUB theme sources, copied from ~/Downloads/archplys
           (archply1/arch-mac-style = active Plymouth theme, archply2/
           arch-slider-and-glow = the other installed Plymouth theme, fluent =
           the active GRUB theme). plymouthd.conf says which Plymouth theme is
