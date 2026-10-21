@@ -3,11 +3,15 @@ ricebtw
 
 (formerly archbtw -- renamed 2026-10-21, GitHub redirects the old name)
 
-I use Arch & Void btw. 
-also apparently Nix & XBPS now, don't tell pacman. 
-one package manager identity crisis wasn't enough, 
-so now two package managers live in my house & refuse to talk to each other. 
-NixOS? Never heard of her. 
+I use Arch & Void btw.
+also apparently Nix, XBPS & Flatpak now, don't tell pacman.
+one package manager identity crisis wasn't enough,
+so now five package managers live in two houses & refuse to talk to each other.
+systemd vs runit? i run both. the war is a spectator sport & i'm in the
+stands with popcorn, wearing both jerseys.
+"which init is better?" my adhd.
+Hyprland got ghosted for MangoWC.
+NixOS? Never heard of her.
 
 =======
 
