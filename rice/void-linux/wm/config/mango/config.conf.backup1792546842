@@ -1,0 +1,330 @@
+env = XDG_CURRENT_DESKTOP,mango
+env = XDG_SESSION_TYPE,wayland
+env = MOZ_ENABLE_WAYLAND,1
+env = QT_QPA_PLATFORM,wayland;xcb
+env = QT_WAYLAND_DISABLE_WINDOWDECORATION,1
+env = GDK_BACKEND,wayland,x11,*
+env = CLUTTER_BACKEND,wayland
+env = SDL_VIDEODRIVER,wayland
+env = NO_AT_BRIDGE,1
+
+tagrule = id:1, layout_name:tile
+tagrule = id:2, layout_name:tile
+tagrule = id:3, layout_name:tile
+tagrule = id:4, layout_name:tile
+tagrule = id:5, layout_name:tile
+tagrule = id:6, layout_name:tile
+tagrule = id:7, layout_name:tile
+tagrule = id:8, layout_name:tile
+tagrule = id:9, layout_name:tile
+
+new_is_master = 0
+default_mfact = 0.55
+default_nmaster = 1
+smartgaps = 1
+circle_layout = tile,scroller,monocle,grid,deck,center_tile,vertical_tile,right_tile,vertical_scroller,vertical_grid,vertical_deck,dwindle,fair,vertical_fair
+view_current_to_back = 1
+
+scroller_structs = 20
+scroller_default_proportion = 1.0
+scroller_focus_center = 1
+scroller_prefer_center = 1
+scroller_prefer_overspread = 1
+edge_scroller_pointer_focus = 1
+scroller_default_proportion_single = 1.0
+scroller_proportion_preset = 0.5,1.0
+
+gappih = 17
+gappiv = 17
+gappoh = 22
+gappov = 16
+borderpx = 3
+border_radius = 16
+
+# Tokyo-night Palette Colors (ARGB)
+rootcolor = 0x1a1b26ff
+bordercolor = 0x3b4261ff
+focuscolor = 0x7aa2f7ff
+maximizescreencolor = 0x7dcfffff
+urgentcolor = 0xf7768eff
+scratchpadcolor = 0x3b4261cc
+globalcolor = 0xbb9af7aa
+overlaycolor = 0x7aa2f7ff
+
+cursor_theme = Adwaita
+cursor_size = 34
+
+animations = 1
+layer_animations = 1
+animation_type_open = slide
+animation_type_close = slide
+animation_fade_in = 1
+animation_fade_out = 1
+zoom_initial_ratio = 0.92
+zoom_end_ratio = 1
+animation_duration_move = 560
+animation_duration_open = 640
+animation_duration_tag = 800
+animation_duration_close = 480
+animation_curve_open = 0.4,0.0,0.2,1.0
+animation_curve_move = 0.4,0.0,0.2,1.0
+animation_curve_tag = 0.4,0.0,0.2,1.0
+animation_curve_close = 0.4,0.0,0.6,1.0
+
+blur = 1
+blur_layer = 1
+blur_optimized = 0
+blur_params_num_passes = 2
+blur_params_radius = 8
+shadows = 1
+layer_shadows = 1
+
+# Layout/look settings copied from old install
+dwindle_smart_split = 0
+dwindle_preserve_split = 0
+dwindle_vsplit = 1
+dwindle_hsplit = 1
+dwindle_smart_resize = 1
+enable_hotarea = 0
+overviewgappi = 5
+overviewgappo = 30
+xwayland_persistence = 1
+focus_on_activate = 1
+sloppyfocus = 1
+warpcursor = 1
+focus_cross_monitor = 0
+focus_cross_tag = 1
+enable_floating_snap = 1
+snap_distance = 30
+drag_tile_to_tile = 1
+repeat_rate = 50
+repeat_delay = 300
+cursor_hide_timeout = 3
+xkb_rules_layout = us
+xkb_rules_model = pc105
+xkb_rules_options = caps:escape
+disable_trackpad = 0
+tap_to_click = 1
+tap_and_drag = 1
+drag_lock = 0
+trackpad_natural_scrolling = 0
+tag_animation_direction = 0
+animation_duration_focus = 360
+animation_curve_focus = 0.4,0.0,0.6,1.0
+layer_animation_type_open = slide
+layer_animation_type_close = slide
+no_border_when_single = 0
+no_radius_when_single = 1
+focused_opacity = 1.0
+unfocused_opacity = 0.85
+blur_params_noise = 0.02
+blur_params_brightness = 0.9
+blur_params_contrast = 0.9
+blur_params_saturation = 1.2
+shadow_only_floating = 1
+shadows_size = 18
+shadows_blur = 13
+shadows_position_x = -4
+shadows_position_y = 2
+shadowscolor = 0x00000040
+
+# Window rules from old install
+windowrule=isfloating:1,width:700,height:400,appid:floatterm
+windowrule=isfloating:1,width:700,height:400,appid:mpv
+windowrule=animation_type_open:zoom,animation_type_close:zoom,appid:floatterm
+windowrule=animation_type_open:zoom,animation_type_close:zoom,appid:mpv
+windowrule=focused_opacity:0.90,unfocused_opacity:0.85,appid:kitty
+
+# Keybinds copied from old install (caelestia binds mapped to dms ipc)
+
+#Binds
+bind=SUPER,Return,spawn,kitty
+bind=SUPER+SHIFT,Return,spawn,kitty --class floatterm
+bind=SUPER,d,spawn,dms ipc call spotlight toggle
+bind=SUPER,a,spawn,dms ipc call dash toggle ""
+bind=SUPER,comma,spawn,dms ipc call control-center toggle
+bind=SUPER,w,spawn,dms ipc call control-center toggle
+bind=SUPER+SHIFT,m,spawn,dms ipc call dash toggle ""
+
+# Notifications
+bind=SUPER,i,spawn,dms ipc call notifications toggle
+bind=SUPER+SHIFT,i,spawn,dms ipc call notifications clearAll
+# bind=SUPER+SHIFT,slash,spawn,touch /tmp/qs-shortcuts-toggle
+bind=SUPER+CTRL,w,spawn,dms ipc call wallpaper next
+bind=SUPER,e,spawn,thunar
+bind=SUPER,q,killclient
+bind=SUPER+SHIFT,space,togglefloating
+bind=SUPER+SHIFT,f,togglefullscreen
+bind=SUPER,x,spawn,dms ipc call lock lock
+bind=SUPER+SHIFT,e,spawn,dms ipc call powermenu toggle
+# SUPER+CTRL,space previously opened a layout-picker overlay; caelestia-shell-mango has no equivalent panel, disabled
+# (native layout switching is already bound directly below: SUPER+space, SUPER+t/c/s/shift+t)
+# bind=SUPER+CTRL,space,spawn_shell,echo > /tmp/qs-layout-menu
+# [no caelestia/ext on this setup] bind=SUPER+ALT,r,spawn_shell,bash ~/.config/mango-ext/toggle_scale.sh
+
+# Shutdown (ported from Hyprland's ALT+S)
+bind=SUPER+SHIFT,s,spawn,systemctl poweroff
+
+# App launchers (ported from Hyprland)
+bind=SUPER,f,spawn,firefox
+bind=SUPER,z,spawn,zen-browser
+bind=SUPER,F5,spawn,spotify
+bind=SUPER,r,spawn_shell,rmpc
+bind=SUPER,c,spawn,code-insiders
+bind=SUPER,n,spawn,kitty nvim
+bind=SUPER,b,spawn,kitty btop
+bind=SUPER,u,spawn,VBoxManage startvm UbuntuVM-eBPF
+bind=SUPER+SHIFT,u,spawn,VBoxManage startvm UbuntuVM-eBPF --type headless
+bind=SUPER+ALT,u,spawn,VBoxManage controlvm UbuntuVM-eBPF acpipowerbutton
+
+# Media playback
+bind=SUPER,p,spawn,playerctl play-pause
+
+bind=SUPER,Left,focusdir,left
+bind=SUPER,Down,focusdir,down
+bind=SUPER,Up,focusdir,up
+bind=SUPER,Right,focusdir,right
+bind=SUPER,h,focusdir,left
+bind=SUPER,j,focusdir,down
+bind=SUPER,k,focusdir,up
+bind=SUPER,l,focusdir,right
+bind=SUPER,Tab,focusstack,next
+bind=SUPER+SHIFT,Tab,focusstack,prev
+
+bind=SUPER+SHIFT,Left,exchange_client,left
+bind=SUPER+SHIFT,Down,exchange_client,down
+bind=SUPER+SHIFT,Up,exchange_client,up
+bind=SUPER+SHIFT,Right,exchange_client,right
+bind=SUPER+SHIFT,h,exchange_client,left
+bind=SUPER+SHIFT,j,exchange_client,down
+bind=SUPER+SHIFT,k,exchange_client,up
+bind=SUPER+SHIFT,l,exchange_client,right
+
+bind=SUPER+CTRL,Left,resizewin,-20,0
+bind=SUPER+CTRL,Right,resizewin,20,0
+bind=SUPER+CTRL,Up,resizewin,0,-20
+bind=SUPER+CTRL,Down,resizewin,0,20
+bind=SUPER+CTRL,h,resizewin,-20,0
+bind=SUPER+CTRL,l,resizewin,20,0
+bind=SUPER+CTRL,k,resizewin,0,-20
+bind=SUPER+CTRL,j,resizewin,0,20
+
+bind=SUPER,1,view,1
+bind=SUPER,2,view,2
+bind=SUPER,3,view,3
+bind=SUPER,4,view,4
+bind=SUPER,5,view,5
+bind=SUPER+SHIFT,1,tag,1
+bind=SUPER+SHIFT,2,tag,2
+bind=SUPER+SHIFT,3,tag,3
+bind=SUPER+SHIFT,4,tag,4
+bind=SUPER+SHIFT,5,tag,5
+
+gesturebind=none,left,3,viewtoleft_have_client
+gesturebind=none,right,3,viewtoright_have_client
+gesturebind=none,up,3,toggleoverview
+gesturebind=none,down,3,toggleoverview
+
+bind=SUPER,space,switch_layout
+bind=SUPER,t,setlayout,tile
+bind=SUPER+SHIFT,t,setlayout,monocle
+bind=SUPER+SHIFT,c,setlayout,center_tile
+bind=SUPER,s,setlayout,scroller
+bind=SUPER,v,spawn_shell,cliphist list | fuzzel --dmenu | cliphist decode | wl-copy
+bind=SUPER+SHIFT,v,setoption,tag_animation_direction,1
+bind=SUPER,o,toggleoverview
+bind=SUPER,g,togglegaps
+bind=SUPER+SHIFT,g,toggleglobal
+bind=SUPER,bracketleft,setmfact,-0.05
+bind=SUPER,bracketright,setmfact,+0.05
+bind=SUPER+ALT,s,switch_proportion_preset
+
+# NOTE: unsupported dispatches by the installed MangoWM build, kept disabled.
+# bind=SUPER+SHIFT,m,toggleminimap,
+bind=SUPER,m,togglemaximizescreen
+# bind=SUPER,p,canvas_overview_toggle,
+# bind=SUPER,bracketleft,canvas_zoom_resize,0.7
+# bind=SUPER,bracketright,canvas_zoom_resize,1.3
+# bind=SUPER,u,canvas_fill_viewport,
+# bind=SUPER+SHIFT,c,canvas_centerview,
+
+bind=SUPER,Print,spawn_shell,flameshot gui
+bind=NONE,Print,spawn_shell,grim ~/screenshots/$(date +%Y-%m-%d_%H-%M-%S).png && notify-send "Screenshot" "Screen captured"
+bind=SHIFT,Print,spawn_shell,grim -g "$(slurp)" ~/screenshots/$(date +%Y-%m-%d_%H-%M-%S).png && notify-send "Screenshot" "Area captured"
+bind=CTRL,Print,spawn_shell,grim - | wl-copy && notify-send "Screenshot" "Copied to clipboard"
+bind=CTRL+SHIFT,Print,spawn_shell,grim -g "$(slurp)" - | wl-copy && notify-send "Screenshot" "Area copied to clipboard"
+
+bindl=NONE,XF86AudioMute,spawn,wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+bindl=NONE,XF86AudioLowerVolume,spawn,wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%-
+bindl=NONE,XF86AudioRaiseVolume,spawn,wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+
+bindl=NONE,XF86MonBrightnessUp,spawn,brightnessctl set +5%
+bindl=NONE,XF86MonBrightnessDown,spawn,brightnessctl set 5%-
+
+# Volume / brightness via SUPER+F-keys (swayosd)
+bind=SUPER+SHIFT,F1,spawn,swayosd-client --output-volume mute-toggle
+bind=SUPER+SHIFT,F2,spawn,swayosd-client --output-volume lower
+bind=SUPER+SHIFT,F3,spawn,swayosd-client --output-volume raise
+bind=SUPER+SHIFT,F7,spawn,swayosd-client --brightness lower
+bind=SUPER+SHIFT,F8,spawn,swayosd-client --brightness raise
+bind=SUPER+SHIFT,F10,spawn,swayosd-client --input-volume mute-toggle
+
+mousebind=SUPER,btn_left,moveresize,curmove
+mousebind=SUPER,btn_right,moveresize,curresize
+axisbind=SUPER,UP,viewtoleft_have_client
+axisbind=SUPER,DOWN,viewtoright_have_client
+bind=SUPER+CTRL,r,reload_config
+
+# Kept from previous setup (no key conflicts)
+bind = SUPER, Escape, spawn, rofi-powermenu
+bind = SUPER+CTRL, t, spawn, theme-from-wallpaper
+bind = SUPER+SHIFT, w, spawn, wallpaper-select
+bind = ALT, SPACE, spawn, sh -c 'foot -a pkg-installer -T "pkg installer" -W 140x40 package-manager.sh'
+bind = SUPER+SHIFT, b, spawn, rofi-bluetooth
+bind = SUPER+SHIFT, n, spawn, rofi-wifi
+bind = SUPER+SHIFT, a, spawn, rofi-audio
+bind = SUPER+SHIFT, z, spawn, rofi-battery
+bind = CTRL+SHIFT, Up, movewin, +0, -40
+bind = CTRL+SHIFT, Down, movewin, +0, +40
+bind = CTRL+SHIFT, Left, movewin, -40, +0
+bind = CTRL+SHIFT, Right, movewin, +40, +0
+bind = CTRL+ALT, Up, resizewin, +0, -40
+bind = CTRL+ALT, Down, resizewin, +0, +40
+bind = CTRL+ALT, Left, resizewin, -40, +0
+bind = CTRL+ALT, Right, resizewin, +40, +0
+bind = SUPER, 6, view, 6, 0
+bind = SUPER, 7, view, 7, 0
+bind = SUPER, 8, view, 8, 0
+bind = SUPER, 9, view, 9, 0
+bind = SUPER+SHIFT, 6, tag, 6, 0
+bind = SUPER+SHIFT, 7, tag, 7, 0
+bind = SUPER+SHIFT, 8, tag, 8, 0
+bind = SUPER+SHIFT, 9, tag, 9, 0
+bind = NONE, XF86AudioMicMute, spawn, volume --toggle-mic
+bind = ALT, Print, spawn, sh -c 'grim -g "$(mmsg get focusing-client | jq -r '\''"\(.x),\(.y) \(.width)x\(.height)"'\'')" - | satty --filename -'
+
+
+
+
+
+
+
+
+
+
+
+
+windowrule = isfloating:1, appid:^(pavucontrol|imv|mpv|nm-connection-editor|blueman-manager|btop|linktui|wiremix)$
+windowrule = isfloating:1, appid:^(thunar|swayimg)$
+windowrule = isfloating:1, title:^(pkg installer)$
+windowrule = isfloating:1, title:^(Open File|Select a File|Save As|Confirm|Preferences)$
+windowrule = isfloating:1, title:^([Pp]icture[-\s]?[Ii]n[-\s]?[Pp]icture)(.*)$
+windowrule = isnamedscratchpad:1, width:1280, height:800, appid:foot-scratch
+
+exec-once = dms run
+exec-once = pipewire-launcher.sh
+exec-once = wallpaper-manager restore
+exec-once = variety
+exec-once = swayosd-server
+exec-once = wl-paste --watch cliphist store
+exec-once = foot --server
+exec-once = /usr/libexec/polkit-gnome-authentication-agent-1 || /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 || lxpolkit

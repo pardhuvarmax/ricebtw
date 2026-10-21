@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
+RASI="${SCRIPT_DIR}/clipboard.rasi"
+
+if ! command -v cliphist >/dev/null 2>&1; then
+    notify-send "Clipboard" "cliphist is not installed."
+    exit 1
+fi
+
+selected=$(cliphist list | rofi -dmenu -p "Clipboard" ${RASI:+-theme "$RASI"} || true)
+
+if [[ -n "$selected" ]]; then
+    echo "$selected" | cliphist decode | wl-copy
+    notify-send -h string:x-canonical-private-synchronous:wm-clip "Clipboard" "Copied to clipboard."
+fi

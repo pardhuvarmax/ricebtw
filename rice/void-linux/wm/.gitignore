@@ -1,0 +1,26 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# Temporary and backup files
+*~
+*.swp
+*.bak
+*.bak.*
+*.tmp
+
+# Local backups and virtual environments
+backups/
+.venv/
+venv/
+*.log
+*.pid
+
+# Runtime State & Cache
+state/
+.cache/
+scratch/
+build/
+
+# Generated Theme Artifacts
+components/themes/generated/

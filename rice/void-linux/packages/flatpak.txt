@@ -1,0 +1,3 @@
+app.zen_browser.zen
+com.spotify.Client
+com.vscodium.codium-insiders

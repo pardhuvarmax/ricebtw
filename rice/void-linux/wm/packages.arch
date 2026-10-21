@@ -1,0 +1,91 @@
+# ==============================================================================
+# Arch Linux Package List for Custom MangoWC Rice
+# Install via: sudo pacman -S --needed $(grep -vE '^\s*#|^\s*$' packages.arch)
+# ==============================================================================
+
+# Core Wayland Compositor & Desktop Shell
+xorg
+mangowc
+foot
+alacritty
+rofi-wayland
+swaybg
+swaylock
+hyprpicker
+mako
+libnotify
+thunar
+thunar-archive-plugin
+thunar-volman
+# papirus-icon-theme
+tumbler
+
+# Status Bar & Widgets (MangoBar built from source)
+mangobar
+
+# Audio Subsystem (PipeWire + WirePlumber)
+pipewire
+wireplumber
+pipewire-alsa
+pipewire-pulse
+pipewire-audio
+
+# Networking & Bluetooth
+networkmanager
+bluez
+bluez-utils
+
+# Hardware, Seat & Authentication
+dbus
+brightnessctl
+polkit
+polkit-gnome
+
+# Screen Capture & Clipboard Management
+grim
+slurp
+wl-clipboard
+cliphist
+tesseract
+tesseract-data-eng
+
+# System Monitoring & Utilities
+btop
+jq
+fzf
+fd
+ripgrep
+github-cli
+v4l-utils
+
+# Build Tools (for source builds: MangoBar, Ly)
+base-devel
+meson
+ninja
+pkgconf
+wayland
+wayland-protocols
+fcft
+pixman
+cairo
+pango
+libpulse
+systemd
+gdk-pixbuf2
+cjson
+pam
+libxcb
+
+# Core CLI Utilities
+unzip
+zip
+tar
+curl
+wget
+git
+tree
+less
+pciutils
+usbutils
+procps-ng
+util-linux

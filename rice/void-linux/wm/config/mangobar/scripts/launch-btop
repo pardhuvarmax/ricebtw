@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if pgrep -x btop >/dev/null 2>&1; then
+    pkill -x btop 2>/dev/null || true
+    exit 0
+fi
+
+if command -v foot >/dev/null 2>&1; then
+    foot --app-id=btop -w 800x750 -T "btop" -e btop &
+elif command -v footclient >/dev/null 2>&1; then
+    footclient -a btop -w 800x750 -T "btop" -e btop &
+else
+    btop &
+fi
+
+sleep 0.12
+if command -v mmsg >/dev/null 2>&1; then
+    bid=$(mmsg get clients 2>/dev/null | jq -r '.[] | select(.appid=="btop" or .title=="btop") | .id' 2>/dev/null | tail -n 1 || true)
+    if [[ -n "$bid" && "$bid" != "null" ]]; then
+        mmsg dispatch focusclient "$bid" >/dev/null 2>&1 || true
+    fi
+fi

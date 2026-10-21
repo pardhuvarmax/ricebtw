@@ -1,0 +1,92 @@
+# ==============================================================================
+# Debian / Ubuntu Package List for Custom MangoWC Rice
+# Install via: sudo apt install $(grep -vE '^\s*#|^\s*$' packages.debian)
+# ==============================================================================
+
+# Core Wayland Compositor & Desktop Shell
+xorg
+mangowc
+foot
+alacritty
+rofi-wayland
+swaybg
+swaylock
+hyprpicker
+mako-notifier
+libnotify-bin
+thunar
+thunar-archive-plugin
+thunar-volman
+# papirus-icon-theme
+tumbler
+
+# Status Bar & Widgets (MangoBar built from source, Eww optional)
+mangobar
+
+# Audio Subsystem (PipeWire + WirePlumber)
+pipewire
+wireplumber
+pipewire-alsa
+pipewire-pulse
+libspa-0.2-bluetooth
+
+# Networking & Bluetooth
+network-manager
+bluez
+
+# Hardware, Seat & Authentication
+dbus
+brightnessctl
+polkitd
+policykit-1-gnome
+
+# Screen Capture & Clipboard Management
+grim
+slurp
+wl-clipboard
+cliphist
+tesseract-ocr
+tesseract-ocr-eng
+
+# System Monitoring & Utilities
+btop
+jq
+fzf
+fd-find
+ripgrep
+gh
+v4l-utils
+
+# Build Tools (for source builds: MangoBar, Ly)
+build-essential
+meson
+ninja-build
+pkg-config
+libwayland-dev
+wayland-protocols
+libfcft-dev
+libpixman-1-dev
+libcairo2-dev
+libpango1.0-dev
+libpulse-dev
+libudev-dev
+libgdk-pixbuf-2.0-dev
+libcjson-dev
+libbasu-dev
+libpam0g-dev
+libxcb1-dev
+libxcb-xkb-dev
+
+# Core CLI Utilities
+unzip
+zip
+tar
+curl
+wget
+git
+tree
+less
+pciutils
+usbutils
+procps
+util-linux

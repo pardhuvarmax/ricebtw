@@ -1,0 +1,13 @@
+audio.gapless_migrated_to_ps=true
+audio.crossfade_migrated_to_ps=true
+audio.play_bitrate_non_metered_migrated=true
+connect.dial_devices="[]"
+connect.mdns_devices="[]"
+audio.sync_bitrate_enumeration=4
+audio.crossfade_v2=true
+audio.equalizer_v2=true
+audio.equalizer.low_mid_peak_gain_v2=223696213
+audio.crossfade.time_v2=6000
+audio.equalizer.low_peak_gain_v2=626349397
+app.browser.zoom-level=-50
+audio.equalizer.low_shelf_gain_v2=760567125

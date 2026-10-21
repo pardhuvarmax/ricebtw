@@ -1,0 +1,19 @@
+configuration {
+    modi:                       "drun,run,window";
+    show-icons:                 true;
+    icon-theme:                 "Papirus-Custom";
+    hover-select:               true;
+    display-drun:               " Apps";
+    display-run:                " Run";
+    display-window:             " Windows";
+    drun-display-format:        "{name}";
+    window-format:              "{w} · {c} · {t}";
+    terminal:                   "footclient";
+    run-command:                "rofi-run {cmd}";
+    run-shell-command:          "rofi-run -t {cmd}";
+    drun {
+        gio-launch:             false;
+    }
+}
+
+@theme "theme.rasi"

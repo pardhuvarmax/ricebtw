@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
+REPO_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+
+export PATH="$REPO_DIR/config/rofi/launcher:$REPO_DIR/config/rofi/calendar:$REPO_DIR/config/rofi/clipboard:$REPO_DIR/config/rofi/powermenu:$REPO_DIR/config/rofi/network:$REPO_DIR/config/rofi/audio:$REPO_DIR/config/rofi/screenshot:$REPO_DIR/config/rofi/wallpaper:$REPO_DIR/config/rofi/theme-selector:$REPO_DIR/config/rofi/keymaps:$REPO_DIR/config/mangobar/scripts:$REPO_DIR/config/themes:$REPO_DIR/config/wallpaper:$REPO_DIR/system/scripts:$REPO_DIR/system/services:$HOME/.local/bin:$PATH"
+
+export XDG_CURRENT_DESKTOP=mango
+export XDG_SESSION_TYPE=wayland
+export XDG_SESSION_DESKTOP=mango
+
+export MOZ_ENABLE_WAYLAND=1
+export QT_QPA_PLATFORM="wayland;xcb"
+export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
+export GDK_BACKEND="wayland,x11,*"
+export CLUTTER_BACKEND=wayland
+export SDL_VIDEODRIVER=wayland
+export _JAVA_AWT_WM_NONREPARENTING=1
+export NO_AT_BRIDGE=1
+
+if [[ -z "${XDG_RUNTIME_DIR:-}" ]]; then
+    export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+    if [[ ! -d "$XDG_RUNTIME_DIR" ]]; then
+        mkdir -p "$XDG_RUNTIME_DIR"
+        chmod 0700 "$XDG_RUNTIME_DIR"
+    fi
+fi
+
+export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
+mkdir -p "$XDG_STATE_HOME/wm"
+
+CONFIG_FILE="$HOME/.config/mango/config.conf"
+if [[ ! -f "$CONFIG_FILE" ]]; then
+    CONFIG_FILE="$REPO_DIR/config/mango/config.conf"
+fi
+
+if [[ -z "${DBUS_SESSION_BUS_ADDRESS:-}" ]] && command -v dbus-run-session >/dev/null 2>&1; then
+    exec dbus-run-session mango -c "$CONFIG_FILE" "$@"
+else
+    exec mango -c "$CONFIG_FILE" "$@"
+fi

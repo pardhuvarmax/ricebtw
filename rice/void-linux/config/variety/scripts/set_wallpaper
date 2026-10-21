@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Variety passes the new wallpaper path as $1. Hand it to the wm wallpaper manager.
+[ -n "$1" ] && exec wallpaper-manager set "$1"
+exit 0

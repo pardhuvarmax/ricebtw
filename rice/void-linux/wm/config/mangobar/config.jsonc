@@ -1,0 +1,101 @@
+{
+    "layer": "top",
+    "height": 30,
+    "buffer-scale": 1,
+
+    "modules-left": [
+      "workspaces"
+    ],
+    "modules-center": [
+      "clock#time"
+    ],
+    "modules-right": [
+        "custom/keyviz",
+        "custom/recorder",
+        "network",
+        "pulseaudio",
+        "custom/memory",
+        "backlight",
+        "battery",
+        "tray"
+    ],
+
+    "workspaces": {
+        "hide-empty": true,
+        "tag-names": ["Ⅰ", "Ⅱ", "Ⅲ", "Ⅳ", "Ⅴ", "Ⅵ", "Ⅶ", "Ⅷ", "Ⅸ"],
+        "overview-label": "󰕴",
+        "on-click": "activate",
+        "on-click-right": "toggle"
+    },
+
+    "clock#time": {
+        "format": "{:L%I:%M %p}",
+        "format-alt": "{:L%a, %d %b}",
+        "on-click-right": "rofi-calander"
+    },
+
+    "network": {
+        "format": "󰤨",
+        "on-click": "launch-wifi"
+    },
+
+    "pulseaudio": {
+        "format": "{icon}",
+        "format-alt": "{icon} {volume}",
+        "format-muted": "",
+        "icons": ["", "", ""],
+        "icon-bluetooth": "󰂯",
+        "on-click-middle": "launch-audio",
+        "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+        "on-scroll-up": "wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 2%+",
+        "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%-"
+    },
+
+    "custom/memory": {
+        "exec": "awk '/MemTotal/{t=$2} /MemAvailable/{a=$2} END{u=(t-a)/1024; if(u>=1024) printf \"%.1f GB\",u/1024; else printf \"%.0f MB\",u}' /proc/meminfo",
+        "interval": 5,
+        "format": "󰍛 {}",
+        "format-alt": "󰍛",
+        "on-click-right": "launch-btop"
+    },
+
+    "backlight": {
+        "format": "{icon}",
+        "format-alt": "{icon} {}",
+        "icons": ["󰃚", "󰃛", "󰃜", "󰃝", "󰃟", "󰃠"],
+        "on-scroll-up": "brightnessctl set +5%",
+        "on-scroll-down": "brightnessctl set 5%-"
+    },
+
+    "battery": {
+        "format": "{icon}",
+        "format-alt": "{icon} {percent}",
+        "icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+        "icon-charging": "󰂄",
+        "on-click-right": "rofi-battery"
+    },
+
+    "custom/recorder": {
+        "format": "{}",
+        "exec": "recorder status",
+        "interval": 1,
+        "signal": 1,
+        "on-click": "recorder region",
+        "on-click-right": "recorder fullscreen",
+        "on-click-middle": "recorder menu"
+    },
+
+    "custom/keyviz": {
+        "format": "{}",
+        "exec": "keyviz status",
+        "interval": 1,
+        "signal": 2,
+        "on-click": "keyviz toggle",
+        "on-click-right": "keyviz menu"
+    },
+
+    "tray": {
+        "icon-size": 18,
+        "spacing": 8
+    }
+}

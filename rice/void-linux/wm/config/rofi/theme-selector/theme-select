@@ -1,0 +1,120 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
+REPO_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
+THEMES_DIR="${REPO_DIR}/config/themes"
+PRESETS_DIR="${THEMES_DIR}/presets"
+DEFS_DIR="${THEMES_DIR}/definitions"
+STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/wm"
+CURRENT_FILE="${STATE_DIR}/current"
+CURRENT_MODE_FILE="${STATE_DIR}/current_mode"
+
+current_theme=""
+if [[ -f "$CURRENT_FILE" ]]; then
+    current_theme=$(cat "$CURRENT_FILE" | tr -d '[:space:]')
+fi
+current_mode="static"
+if [[ -f "$CURRENT_MODE_FILE" ]]; then
+    current_mode=$(cat "$CURRENT_MODE_FILE" | tr -d '[:space:]')
+fi
+
+RASI="${SCRIPT_DIR}/theme-selector.rasi"
+
+THEME_SWITCH="$(command -v theme-switch || true)"
+if [[ -z "$THEME_SWITCH" || ! -x "$THEME_SWITCH" ]]; then
+    THEME_SWITCH="${THEMES_DIR}/theme-switch"
+fi
+
+declare -a theme_ids=()
+declare -a display_names=()
+active_idx=0
+
+# Helper to format/fetch a clean display name
+get_theme_name() {
+    local id="$1"
+    local name=""
+    if [[ -f "$DEFS_DIR/${id}.json" ]]; then
+        name=$(grep -m1 '"name":' "$DEFS_DIR/${id}.json" | awk -F'"' '{print $4}')
+    fi
+    if [[ -z "$name" ]]; then
+        name=$(echo "$id" | sed -E 's/(^|[-_])([a-z])/\U \2/g' | xargs)
+    fi
+    echo "$name"
+}
+
+# 1. Preset Themes
+if [[ -d "$PRESETS_DIR" ]]; then
+    for d in "$PRESETS_DIR"/*/; do
+        [[ -d "$d" ]] || continue
+        id=$(basename "$d")
+        if [[ -f "$d/theme.conf" || -f "$d/theme-config.bash" ]]; then
+            name=$(get_theme_name "$id")
+            if [[ "$current_mode" == "static" && "$current_theme" == "$id" ]]; then
+                active_idx="${#theme_ids[@]}"
+                display_names+=("✔ ${name}")
+            else
+                display_names+=("${name}")
+            fi
+            theme_ids+=("$id")
+        fi
+    done
+fi
+
+# 2. Color Palettes (only if not already in presets)
+if [[ -d "$DEFS_DIR" ]]; then
+    for f in "$DEFS_DIR"/*.json; do
+        [[ -f "$f" ]] || continue
+        id=$(basename "$f" .json)
+        for existing in "${theme_ids[@]}"; do
+            [[ "$existing" == "$id" ]] && continue 2
+        done
+        name=$(get_theme_name "$id")
+        if [[ "$current_mode" == "static" && "$current_theme" == "$id" ]]; then
+            active_idx="${#theme_ids[@]}"
+            display_names+=("✔ ${name}")
+        else
+            display_names+=("${name}")
+        fi
+        theme_ids+=("$id")
+    done
+fi
+
+# 3. Dynamic Theme
+if [[ "$current_mode" == "dynamic" ]]; then
+    active_idx="${#theme_ids[@]}"
+    display_names+=("✔ Dynamic Wallpaper")
+else
+    display_names+=("Dynamic Wallpaper")
+fi
+theme_ids+=("dynamic")
+
+menu_items=$(printf "%s\n" "${display_names[@]}")
+
+rofi_args=(
+    -dmenu
+    -i
+    -format i
+    -no-show-icons
+    -p "Themes"
+)
+
+if [[ -n "${active_idx:-}" && "$active_idx" =~ ^[0-9]+$ ]]; then
+    rofi_args+=(-selected-row "$active_idx")
+fi
+
+if [[ -n "${RASI:-}" && -f "$RASI" ]]; then
+    rofi_args+=(-theme "$RASI")
+fi
+
+set +e
+selected_idx=$(printf "%s\n" "$menu_items" | rofi "${rofi_args[@]}")
+status=$?
+set -e
+
+if [[ "$status" -ne 0 || -z "$selected_idx" || ! "$selected_idx" =~ ^[0-9]+$ || "$selected_idx" -ge "${#theme_ids[@]}" ]]; then
+    exit 0
+fi
+
+target_id="${theme_ids[$selected_idx]}"
+exec "$THEME_SWITCH" "$target_id"

@@ -1,0 +1,18 @@
+@import "../theme.rasi"
+
+window {
+    width:                       400px;
+    location:                    center;
+    anchor:                      center;
+}
+
+listview {
+    lines:                       5;
+    columns:                     1;
+    spacing:                     6px;
+    fixed-height:                false;
+}
+
+inputbar {
+    enabled:                     false;
+}
