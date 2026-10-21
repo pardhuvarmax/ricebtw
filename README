@@ -68,7 +68,7 @@ backup/               the original stock `home-manager init` output, kept
 rice/void-linux/      plain backup COPY of the Void Linux (experimental) setup:
                        MangoWC + DankMaterialShell dotfiles, bashrc/aliases,
                        xbps package lists, the DMS repo files. Separate from the
-                       Arch rice around it, see rice/void-linux/README.md
+                       Arch rice around it, see rice/void-linux/README
 rice/arch-linux/       Arch desktop dotfiles live in config/, home/, boot/ here
 rice/                 plain backup COPY of the Arch desktop dotfiles
                        (MangoWC now; hypr/ is legacy from the Hyprland days;

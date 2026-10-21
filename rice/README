@@ -6,7 +6,7 @@ here if you want the backup updated.
 
 VOID LINUX: rice/void-linux/ is a separate, self-contained backup of the
 experimental Void install (runit/xbps, MangoWC + DankMaterialShell). Nothing
-else in this file describes it -- read rice/void-linux/README.md. Everything
+else in this file describes it -- read rice/void-linux/README. Everything
 below this paragraph is the Arch daily driver.
 
 STATUS (2026-08-05): compositor migrated from Hyprland to MangoWC, and shell

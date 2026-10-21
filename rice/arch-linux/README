@@ -1,0 +1,40 @@
+# Arch Linux rice (daily driver)
+
+The main machine. Void (`../void-linux/`) is the experimental one.
+This is a plain copy of the live dotfiles, kept as a version-controlled backup. Nothing here is managed or symlinked by Home Manager, and editing a file here does nothing to the running config. Edit the real file under `~/.config` or `~`, then re-copy it here.
+
+**Stack:** Arch Linux, systemd + pacman/paru, MangoWC, caelestia-shell-mango (a MangoWC port of caelestia-shell), kitty, matugen theming.
+
+## Layout
+
+| Folder | What it is |
+|---|---|
+| `config/` | `~/.config` copies, one subfolder per app (kitty, nvim, fish, rofi, matugen, fastfetch, cava, Kvantum, qt5ct/qt6ct, gtk-3.0, ...) plus loose files (`.zshrc`, `kdeglobals`, `chrome-flags.conf`, ...) |
+| `config/mangoconfigs/` | the active setup: `mangowc/` (compositor config, `conf.d/*.conf`), `caelestia/` (shell source + `shell.json`), `wallpapers/` |
+| `home/` | `~/.p10k.zsh`, `~/.gtkrc-2.0`, `~/.aliases`, and `Pictures/Wallpapers` (about 3.7 GB, the matugen wallpaper pool) |
+| `boot/` | Plymouth themes (`arch-mac-style` active) and the `fluent` GRUB theme, with `plymouthd.conf` and `grub-theme-setting.txt` |
+
+Each subfolder has its own README with details. The top-level `../README` has the full history and exclusion notes.
+
+## Legacy (not in use)
+
+- `config/hypr/`, waybar, swaync, wlogout, illogical-impulse and the other Hyprland-era configs are kept only as reference.
+- `config/mangoconfigs/kamalenshell/` is the old kamalen-shell snapshot, replaced by caelestia-shell-mango.
+
+## Differences from the Void setup
+
+- **Shell:** caelestia-shell-mango here, DankMaterialShell on Void.
+- **Packages and services:** pacman/paru and systemd here, xbps and runit on Void.
+- **Theming:** matugen drives colours on Arch; on Void DMS owns them and the wm theme engine is disabled.
+
+## Restore
+
+1. Copy `config/*` into `~/.config` and `home/` dotfiles into `~`. The mango config is `config/mangoconfigs/mangowc/`.
+2. Put wallpapers in `~/Pictures/Wallpapers` (from `home/Pictures/`) and `~/wallpapers` (from `config/mangoconfigs/wallpapers/`).
+3. Boot themes: Plymouth themes go in `/usr/share/plymouth/themes/<name>/`, then `sudo plymouth-set-default-theme -R <name>`. The GRUB theme goes in `/usr/share/grub/themes/<name>/`, set `GRUB_THEME` in `/etc/default/grub`, then `sudo grub-mkconfig -o /boot/grub/grub.cfg`.
+
+## Known exclusions
+
+- The OpenWeather API key was removed from `config/hypr/scripts/quickshell/calendar/` (a `.env.example` template replaces it). The real key stays only in the live file.
+- Not backed up: `~/.config/zsh` (shell history and completion cache), `~/.config/rice-cooker` (an app cache), the unused top-level `~/.config/quickshell`, and the `~/.local/share/nvim` plugin data (reproducible from `lazy-lock.json`).
+- One wallpaper over GitHub's 100 MB limit is gitignored and stays local-only.
