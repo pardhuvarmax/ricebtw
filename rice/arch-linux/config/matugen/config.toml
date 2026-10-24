@@ -3,7 +3,7 @@ reload_apps = false
 
 [templates.quickshell]
 input_path = "~/.config/matugen/templates/qs_colors.json.template"
-output_path = "~/.config/hypr/scripts/quickshell/qs_colors.json"
+output_path = "~/.cache/matugen/qs_colors.json"
 
 [templates.kitty]
 input_path = "~/.config/matugen/templates/kitty-colors.conf.template"
@@ -12,10 +12,6 @@ output_path = "~/.config/kitty/kitty-matugen-colors.conf"
 [templates.neovim]
 input_path = "~/.config/matugen/templates/nvim-colors.lua.template"
 output_path = "~/.config/nvim/matugen_colors.lua"
-
-[templates.cava]
-input_path = "~/.config/matugen/templates/cava-colors.ini.template"
-output_path = "~/.config/cava/colors"
 
 [templates.swayosd]
 input_path = "~/.config/matugen/templates/swayosd.css.template"
@@ -41,6 +37,7 @@ output_path = "~/.config/qt5ct/qss/matugen-style.qss"
 input_path = "~/.config/matugen/templates/qt-style.qss.template"
 output_path = "~/.config/qt6ct/qss/matugen-style.qss"
 
-[templates.hyprland]
-input_path = '~/.config/matugen/templates/hyprland.conf.template'
-output_path = '~/.config/hypr/colors.conf'
+[templates.fastfetch]
+input_path = "~/.config/matugen/templates/fastfetch-colors.json.template"
+output_path = "~/.cache/matugen/fastfetch-colors.json"
+post_hook = "sh -c '/home/sicmundus/.config/fastfetch/theme-hook.sh >/dev/null 2>&1 &'"
