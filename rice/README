@@ -9,6 +9,12 @@ experimental Void install (runit/xbps, MangoWC + DankMaterialShell). Nothing
 else in this file describes it -- read rice/void-linux/README. Everything
 below this paragraph is the Arch daily driver.
 
+STATUS (2026-10-24): the Arch shell moved from caelestia-shell-mango to
+DankMaterialShell (DMS), still on MangoWC. The current setup is in
+arch-linux/dms/ (read its README); caelestia-shell-mango and the mango config
+under config/mangoconfigs/ are now legacy, kept for reference and rollback.
+The August note below describes the previous state.
+
 STATUS (2026-08-05): compositor migrated from Hyprland to MangoWC, and shell
 migrated from kamalen-shell to a MangoWC port of caelestia-shell
 (evoziosk/caelestia-shell-mango). config/hypr/ and everything below that's
@@ -20,7 +26,8 @@ confirmed nothing still depends on it -- that would only drop it from
 future checkouts, not from git history; anything already pushed stays in
 this repo's history on GitHub permanently regardless, recoverable any time.
 Same goes for kamalen-shell: see config/mangoconfigs/README for the current
-active setup (mango + caelestia) vs. what's legacy.
+setup as of August (mango + caelestia), now legacy -- the active one is
+arch-linux/dms/.
 
 Deliberately left out of Phase 7/8 of the Nix migration (see the main
 README) -- this is the live matugen-driven theming + Hyprland/quickshell

@@ -1,0 +1,4 @@
+#!/bin/sh
+# User-local DMS 2.0.0 (official tagged release). Shadows /usr/bin/dms (pacman dms-shell 1.6.3).
+# To go back to the packaged shell: rm this file.
+exec "$HOME/.local/opt/dms-2.0.0/bin/dms" "$@"

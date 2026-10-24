@@ -1,0 +1,121 @@
+DankMaterialShell on Arch (active shell)
+========================================
+
+Saved 2026-10-24. On this date the Arch install moved its desktop shell from
+caelestia-shell-mango to DankMaterialShell (DMS). The compositor did not
+change: still MangoWC. This folder is the current, active setup. Everything
+under ../config/mangoconfigs/ (caelestia/, mangowc/) is the previous
+Caelestia-era setup, kept for reference and rollback only.
+
+Like the rest of rice/, this is a plain COPY of the live files. Nothing here is
+managed or symlinked by Home Manager; editing a file here changes nothing on
+the running system.
+
+Stack
+-----
+
+Compositor   mangowm-git 0.15.5, held back on purpose (IgnorePkg = mangowm-git
+             in /etc/pacman.conf). Its config still uses the old key names
+             (borderpx, gappih, bordercolor, ...) which mango 0.18+ ignores,
+             so do not upgrade it without migrating conf.d/ first.
+Shell        DMS 2.0.0, the official tagged release, installed user-local in
+             ~/.local/opt/dms-2.0.0 (no pacman package yet). bin/dms is a
+             one-line wrapper that makes `dms` resolve to it.
+Fallback     the pacman package dms-shell 1.6.3 is still installed underneath
+             (/usr/bin/dms); `rm ~/.local/bin/dms` brings it back.
+Quickshell   quickshell-git 0.3.2
+Fonts        Google Sans Flex (UI), JetBrainsMono Nerd Font (mono)
+
+Layout
+------
+
+config/settings.json   -> ~/.config/dms/settings.json. Starts from the DMS 2.0
+                          settings of the Void install (see ../../void-linux),
+                          then local choices: fonts, popup/dock transparency
+                          0.7, frame mode "separate" (launcher opens
+                          centered). ~/.config/DankMaterialShell is now a
+                          symlink to ~/.config/dms (DMS 2.0 migrated it).
+mango/                 -> ~/.config/mango. config.conf sources conf.d/*.conf
+                          and two DMS-generated files from mango/dms/ (colors
+                          and windowrules). dms/layout.conf is deliberately NOT
+                          sourced so the gaps/borders in conf.d/ stay in
+                          charge. idle.sh is the swayidle script.
+bin/dms                -> ~/.local/bin/dms (wrapper, see above)
+bin/super-tap          -> ~/.local/bin/super-tap. Tapping Super alone opens the
+                          launcher; Super+<key> combos are ignored. It watches
+                          /dev/input passively (needs the `input` group) and is
+                          started from mango/conf.d/autostart.conf.
+wallpaper/lock-screen.png  the lock screen background (settings.json has
+                          lockScreenWallpaperPath pointing at
+                          ~/Pictures/toji-zenin/<name>.png)
+
+Keybinds (Caelestia command -> DMS)
+-----------------------------------
+
+Same keys as before, only the command behind them changed:
+
+SUPER+d            launcher        dms ipc call spotlight toggle
+SUPER+a            dashboard       dms ipc call dash toggle ""
+SUPER+SHIFT+m      dashboard       dms ipc call dash toggle ""
+SUPER+, / SUPER+w  control center  dms ipc call control-center toggle
+SUPER+i            notifications   dms ipc call notifications toggle
+SUPER+SHIFT+i      clear notifs    dms ipc call notifications clearAll
+SUPER+x            lock            dms ipc call lock lock
+SUPER+SHIFT+e      power menu      dms ipc call powermenu toggle
+SUPER+CTRL+w       wallpaper       random file from ~/Pictures/wallpapers via
+                                   dms ipc call wallpaper set
+SUPER+v            clipboard       dms ipc call clipboard toggle
+SUPER+ALT+n        notepad         dms ipc call notepad toggle
+SUPER+ALT+s        DMS settings    dms ipc call settings focusOrToggle
+SUPER+SHIFT+w      DMS settings    ... focusOrToggleWith personalization
+volume/mute/mic    XF86 keys and SUPER+SHIFT+F1..F3,F10 -> dms ipc call audio
+brightness         XF86 keys and SUPER+SHIFT+F7/F8 -> dms ipc call brightness
+                   increment|decrement 5 ""
+
+Quirks worth remembering: `dash toggle` and `brightness ...` need an explicit
+(empty) trailing argument or the IPC call fails with "Too few arguments".
+SUPER+ALT+s used to cycle the scroller proportion preset; that bind is kept
+commented out in binds.conf.
+
+Other changes made during the move
+----------------------------------
+
+- swayosd-server is no longer started; DMS draws its own volume/brightness OSD.
+- idle.sh locks with `dms ipc call lock lock`. It used to write to
+  ~/.cache/qs/lock, a trigger only the old kamalen shell watched, so idle and
+  pre-suspend locking silently did nothing for a while.
+- Layer animations are off (layer_animations=0 in conf.d/animations.conf): with
+  them on, every DMS panel slid in from an edge.
+- A window rule makes the DMS 2.0 Settings window float (app id
+  dev.duxlabs.shell; 1.6.3 used com.danklinux.dms).
+- The notification daemon is DMS now. Only one shell may run at a time.
+
+Known caveats
+-------------
+
+- Background blur: mango does not implement ext-background-effect-v1, so DMS
+  reports "Unsupported". Blur still happens, but through mango's own
+  blur_layer on DMS layer surfaces.
+- Upstream DMS master switched its generated mango files to snake_case key
+  names (border_color, ...) for mango 0.18+. Mango 0.15.5 only knows the old
+  ones (bordercolor, ...). The v2.0.0 build used here still wrote the old
+  names (see mango/dms/colors.conf), but a newer DMS may not; if the border
+  colours stop following the wallpaper, this is why, and the static colours
+  in conf.d/colors.conf apply instead.
+- A newer DMS (2.x) will be packaged in Arch as dux-shell. When it lands,
+  remove ~/.local/bin/dms and install the package, after checking it still
+  works with mango 0.15.5.
+
+Restore
+-------
+
+1. Install quickshell-git, matugen, accountsservice and the optional deps DMS
+   lists (cava, i2c-tools, qt6ct, qt6-multimedia, wtype, kimageformats, ...).
+2. Download dms-full-amd64.tar.gz from the DMS v2.0.0 release, verify its
+   .sha256, and unpack it to ~/.local/opt/dms-2.0.0. (Or install the dms-shell
+   package for 1.6.3; settings.json is 2.0 format, so some keys are ignored.)
+3. cp bin/* ~/.local/bin/ and chmod +x them.
+4. cp config/settings.json ~/.config/dms/ and
+   cp -a mango/. ~/.config/mango/
+5. Put lock-screen.png at the path named in settings.json.
+6. Reload mango (SUPER+CTRL+r) and start the shell with `dms run`.

@@ -1,0 +1,77 @@
+#!/usr/bin/env python3
+"""Run a command when Super is tapped on its own (press+release, nothing else
+pressed in between, shorter than TAP_MAX seconds).
+
+Passive: reads /dev/input/event* without grabbing, so key events still reach
+the compositor untouched. Usage: super-tap [command...]
+Default command: dms ipc call spotlight toggle
+"""
+import glob, os, selectors, struct, subprocess, sys, time
+
+EV_KEY = 1
+KEY_LEFTMETA, KEY_RIGHTMETA = 125, 126
+TAP_MAX = 0.35
+EVENT = struct.Struct("llHHi")  # struct input_event on 64-bit linux
+
+cmd = sys.argv[1:] or ["dms", "ipc", "call", "spotlight", "toggle"]
+
+sel = selectors.DefaultSelector()
+opened = {}
+meta_down = None  # time of Super press while still clean, else None
+
+
+def scan():
+    for path in glob.glob("/dev/input/event*"):
+        if path in opened:
+            continue
+        try:
+            fd = os.open(path, os.O_RDONLY | os.O_NONBLOCK)
+        except OSError:
+            continue
+        opened[path] = fd
+        sel.register(fd, selectors.EVENT_READ, path)
+
+
+def drop(fd, path):
+    try:
+        sel.unregister(fd)
+    except KeyError:
+        pass
+    os.close(fd)
+    opened.pop(path, None)
+
+
+def handle(code, value):
+    global meta_down
+    if value == 2:  # autorepeat
+        return
+    if code in (KEY_LEFTMETA, KEY_RIGHTMETA):
+        if value == 1:
+            meta_down = time.monotonic()
+        elif value == 0 and meta_down is not None:
+            if time.monotonic() - meta_down <= TAP_MAX:
+                subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            meta_down = None
+    elif value == 1:  # any other key / mouse button / touch while Super held
+        meta_down = None
+
+
+scan()
+last_scan = time.monotonic()
+while True:
+    for key, _ in sel.select(timeout=5):
+        fd, path = key.fd, key.data
+        try:
+            data = os.read(fd, EVENT.size * 64)
+        except BlockingIOError:
+            continue
+        except OSError:
+            drop(fd, path)
+            continue
+        for off in range(0, len(data) - EVENT.size + 1, EVENT.size):
+            _, _, etype, code, value = EVENT.unpack_from(data, off)
+            if etype == EV_KEY:
+                handle(code, value)
+    if time.monotonic() - last_scan > 10:
+        scan()
+        last_scan = time.monotonic()

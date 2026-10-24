@@ -1,4 +1,9 @@
-Everything related to the current mango/caelestia setup, grouped together
+LEGACY since 2026-10-24: the shell moved from caelestia-shell-mango to
+DankMaterialShell. The current setup lives in ../../dms/. What follows is the
+previous mango/caelestia setup, kept for reference and rollback. The ACTIVE
+labels below are historical.
+
+Everything related to the former mango/caelestia setup, grouped together
 since ../hypr and the rest of ../ are Hyprland-era and no longer active.
 
 mangowc/       ACTIVE. mango's own compositor config (conf.d/*.conf,

@@ -7,8 +7,8 @@ backup. Nothing here is managed or symlinked by Home Manager, and editing a
 file here does nothing to the running config. Edit the real file under
 ~/.config or ~, then re-copy it here.
 
-Stack: Arch Linux, systemd + pacman/paru, MangoWC, caelestia-shell-mango (a
-MangoWC port of caelestia-shell), kitty, matugen theming.
+Stack: Arch Linux, systemd + pacman/paru, MangoWC, DankMaterialShell (DMS,
+moved from caelestia-shell-mango on 2026-10-24), kitty, matugen theming.
 
 Layout
 ------
@@ -17,9 +17,13 @@ config/                ~/.config copies, one subfolder per app (kitty, nvim,
                        fish, rofi, matugen, fastfetch, cava, Kvantum,
                        qt5ct/qt6ct, gtk-3.0, ...) plus loose files (.zshrc,
                        kdeglobals, chrome-flags.conf, ...)
-config/mangoconfigs/   the active setup: mangowc/ (compositor config,
-                       conf.d/*.conf), caelestia/ (shell source + shell.json),
-                       wallpapers/
+dms/                   the ACTIVE setup: DMS settings, the MangoWC config
+                       (conf.d/*.conf, idle.sh), the DMS-generated mango files,
+                       the `dms` wrapper and super-tap helper in bin/. Has its
+                       own README with keybind mapping and restore steps.
+config/mangoconfigs/   LEGACY (Caelestia era, replaced 2026-10-24): mangowc/
+                       (old compositor config), caelestia/ (shell source +
+                       shell.json), wallpapers/
 home/                  ~/.p10k.zsh, ~/.gtkrc-2.0, ~/.aliases, and
                        Pictures/Wallpapers (~3.7G, the matugen wallpaper pool)
 boot/                  Plymouth themes (arch-mac-style active) and the fluent
@@ -34,13 +38,15 @@ Legacy (not in use)
 
 config/hypr/, waybar, swaync, wlogout, illogical-impulse and the other
 Hyprland-era configs are kept only as reference.
-config/mangoconfigs/kamalenshell/ is the old kamalen-shell snapshot, replaced
-by caelestia-shell-mango.
+config/mangoconfigs/caelestia/ and mangowc/ are the Caelestia-era setup,
+replaced by DMS (see dms/). config/mangoconfigs/kamalenshell/ is the older
+kamalen-shell snapshot, replaced by caelestia-shell-mango before that.
 
 Differences from the Void setup
 -------------------------------
 
-Shell        caelestia-shell-mango here, DankMaterialShell on Void.
+Shell        DankMaterialShell on both. Arch runs DMS 2.0.0 user-local on
+             MangoWC 0.15.5 (held back); Void runs the packaged DMS 2.0.0.
 Packages     pacman/paru and systemd here, xbps and runit on Void.
 Theming      matugen drives colours on Arch; on Void DMS owns them and the wm
              theme engine is disabled.
@@ -49,7 +55,8 @@ Restore
 -------
 
 1. Copy config/* into ~/.config and the home/ dotfiles into ~. The mango
-   config is config/mangoconfigs/mangowc/.
+   config and DMS settings are in dms/ (follow dms/README); the old Caelestia
+   mango config is config/mangoconfigs/mangowc/.
 2. Put wallpapers in ~/Pictures/Wallpapers (from home/Pictures/) and
    ~/wallpapers (from config/mangoconfigs/wallpapers/).
 3. Boot themes: Plymouth themes go in /usr/share/plymouth/themes/<name>/, then

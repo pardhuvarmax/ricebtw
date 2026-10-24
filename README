@@ -22,7 +22,8 @@ Machines
 Arch Linux    daily driver. Everything below (Home Manager, Nix, the Phase
               list, GPU notes, pacman rules) is about this install, and
               rice/ (outside void-linux/) is its desktop backup:
-              MangoWC + caelestia-shell-mango. Hyprland is no longer used
+              MangoWC + DankMaterialShell (moved from caelestia-shell-mango
+              on 2026-10-24, see rice/arch-linux/dms/). Hyprland is no longer used
               (replaced by MangoWC in Aug 2026); its configs are kept as
               legacy reference only.
 Void Linux    experimenting. runit + xbps, no systemd, no Nix, no Home
@@ -74,7 +75,9 @@ rice/void-linux/      plain backup COPY of the Void Linux (experimental) setup:
                        MangoWC + DankMaterialShell dotfiles, bashrc/aliases,
                        xbps package lists, the DMS repo files. Separate from the
                        Arch rice around it, see rice/void-linux/README
-rice/arch-linux/       Arch desktop dotfiles live in config/, home/, boot/ here
+rice/arch-linux/       Arch desktop dotfiles live in config/, home/, boot/ here;
+                       dms/ is the active DankMaterialShell + MangoWC setup
+                       (settings, mango config, keybinds), see its README
 rice/                 plain backup COPY of the Arch desktop dotfiles
                        (MangoWC now; hypr/ is legacy from the Hyprland days;
                        also kitty, rofi, swaync, etc), plus

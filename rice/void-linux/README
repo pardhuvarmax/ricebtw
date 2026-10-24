@@ -27,7 +27,9 @@ Differences from the Arch setup
 -------------------------------
 
 - Shell: DMS (`dms run`) instead of caelestia-shell-mango. The old caelestia
-  keybinds are mapped to `dms ipc call ...`.
+  keybinds are mapped to `dms ipc call ...`. (Since 2026-10-24 Arch uses DMS
+  too, see ../arch-linux/dms/; this header describes Arch as it was when this
+  was written.)
 - Packages: xbps instead of pacman/paru; Zen, Spotify and VSCodium Insiders
   come from Flatpak.
 - Services: runit (sv, /var/service) instead of systemd. The service aliases
