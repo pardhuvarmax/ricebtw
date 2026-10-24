@@ -6,3 +6,8 @@ Pictures/Wallpapers/ -- full copy of ~/Pictures/Wallpapers (2226 files, ~3.7G),
 the wallpaper pool matugen/hyprpaper pick from. Large and tracked in git
 knowingly (repo is public); this is the one folder in rice/ that's about
 storage, not documentation.
+
+fastfetch-custom/ -- the two source images for the fastfetch logo (~/fastfetch-custom):
+arch-ultron.png (used by ~/.config/fastfetch/make-ultron-logo.sh to build the
+theme-following logo) and arch-toji.png (the earlier blue logo style). See
+config/fastfetch/README for how they are used.

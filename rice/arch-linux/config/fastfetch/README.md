@@ -26,7 +26,7 @@ The zsh `fetch` function and the fish random-ASCII `ff` function use their own c
   `cp styles/ultron-image-long-quote/ultron-logo.png ultron-logo.png`.
   To regenerate instead: `styles/ultron-image-long-quote/make-ultron-logo.sh <src.png> <out.png>`.
 
-## Style 3: `styles/ultron-image-static-red/` (live machine only, not in the repo copy)
+## Style 3: `styles/ultron-image-static-red/`
 - The Ultron image with the long quote and no "ULTRON" rule, in fixed red (does not follow the theme).
 - Restore: use that folder's `make-ultron-logo.sh` and remove the `[templates.fastfetch]` entry from
   `~/.config/matugen/config.toml`, then run the script.
@@ -53,6 +53,6 @@ The zsh `fetch` function and the fish random-ASCII `ff` function use their own c
 - Tweak: `SIZE` (quote size); accent lightness/saturation are in the python block at the top
   (`hls_to_rgb(h, 0.62, s)`); highlighted words are the `hl` calls; boxes are the `┌───┐` / `└───┘` lines.
 - Needs: ImageMagick with pango, python3, FreeSerif, and the source art `~/fastfetch-custom/arch-ultron.png`
-  (not stored in the dotfiles repo).
+  (also kept in the dotfiles repo at rice/arch-linux/home/fastfetch-custom/; `arch-toji.png` is the other logo).
 - Other quotes tried: "Well, like the man said: 'What doesn't kill you, just makes me stronger.'" and
   "I had strings, but now I'm free... There are no strings on me." (explicit line break after "free...").
